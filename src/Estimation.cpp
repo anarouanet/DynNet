@@ -364,6 +364,8 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
     // ##### computering of the likelihood ########################## all linear
     loglik_i = -0.5*(sum(k_i)*log(2*M_PI) + log(abs_det_matVY_i) + as_scalar(Ytildi_nu_i.t()*inv_sympd(matVY_i)*Ytildi_nu_i)) + log_Jac_Phi;
 
+   
+    
     //loglik_i0 = -0.5*(sum(k_i)*log(2*M_PI) + log(abs_det_matVY_i) + as_scalar(Ytildi_nu_i.t()*inv_sympd(matVY_i)*Ytildi_nu_i)) ;//+ log_Jac_Phi;
 
     //loglik_i2 = -0.5*(sum(k_i)*log(2*M_PI) + log(det(sigMSM)) + as_scalar(Ytildi_nu_i.t()*inv_sympd(sigMSM)*Ytildi_nu_i)) + log_Jac_Phi;
@@ -788,7 +790,7 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
       vrais_no_surv /= MCnr;
 
       lvrais = -log(MCnr) + expotrick + log(vrais) + log_Jac_Phi - log(surv0); 
-
+      
        if(printa==1 && check==1){
          Rcout << " diffY "<<loglik_i- lvrais<< " loglik_i "<< loglik_i << " lvrais "<<lvrais<< " log(surv0) "<<log(surv0) <<endl;
         //<< " MCnr "<<MCnr<< " minY "<< minY << " vrais / MCnr "<<vrais / MCnr;
@@ -848,7 +850,6 @@ double Loglikei_GLM2(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int 
   int q = sum(q_nD);
   
   if(((max(if_link) < 2 && !survival)&& check <3) || check==1){
-    
     // ###### compute  Yi - E(Yi) ##### deleting missing values #####
     Ytildi_nu_i = YiNui(nD, matrixP, tau, tau_i, DeltaT, Ytildi, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i);
     

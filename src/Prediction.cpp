@@ -983,8 +983,6 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
  //' @param knots indicates position of knots used to transform outcomes
  //' @param degree indicates degree of the basis of splines
  //' @param epsPred convergence criteria for prediction using MC method//' 
- //' @param ui_hat matrix of bayesian estimates of random effects
- //' @param nE number of survival events
  //' @return a matrix
  //' @export
  //' 
