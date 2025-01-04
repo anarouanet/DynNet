@@ -512,7 +512,7 @@ DataFormat <- function(data, subject, fixed_X0.models , randoms_X0.models , fixe
     surv_obj <- survival::Surv(Survdata[,2], Survdata[,3], type=type)
     Event <- surv_obj[,1]
     StatusEvent <- surv_obj[,2]
-    message("check use of mstate here....")
+    #message("check use of mstate here....")
   }
   
   nE <- length(fixed.survival.models)
