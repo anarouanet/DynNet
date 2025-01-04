@@ -837,8 +837,6 @@ double Loglikei_GLM2(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int 
     expotrick=0;
   
   int check=2;
-  if(max(if_link) < 2 && MCnr>0)
-    check=1;
   // check = 1 both QMC and closed likelihood for comparison of individual likelihood (type_int, MCnr must be defined!) 
   // check =  2 close likelihood if links = linear/splines, QMC if links = thresholds or if survival = T
   // check =  3 MC integration (even if links = linear/splines and survival = F)
