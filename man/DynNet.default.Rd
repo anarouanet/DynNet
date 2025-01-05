@@ -106,6 +106,8 @@ outcomes and latents processes}
 
 \item{makepred}{indicates if predictions in the real scales of outcomes have to be done}
 
+\item{MCnr_pred}{number of MC replicates to compute the integral over random effects}
+
 \item{MCnr}{number of QMC replicates to compute the integral over random effects}
 
 \item{MCnr2}{number of QMC replicates to compute the integral over random effects for Louis's variance}
