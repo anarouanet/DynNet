@@ -4,7 +4,7 @@
 #' @import RcppArmadillo
 NULL
 
-#' Function that computes the log-likelihood of the observed data
+#' Function that computes the log-likelihood of the observed data for a given ui value
 NULL
 
 #' Function that computes the log-likelihood of the observed data

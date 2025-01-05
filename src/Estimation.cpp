@@ -2583,7 +2583,7 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
  Function f_Loglik: log-likelihood of the observed data for a given ui value
  */
 //===========================================================================================
-//' Function that computes the log-likelihood of the observed data
+//' Function that computes the log-likelihood of the observed data for a given ui value
  //'  
  //' @param K an integer indicating the number of markers
  //' @param nD an integer indicating the number of latent processes
@@ -2989,7 +2989,7 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
     p += m_is[n];
   }
   if(loglik <= -pow(10,9)){
-    Rcout << "   loglik "<< loglik<<endl;
+    //Rcout << "   loglik "<< loglik<<endl;
     loglik=-pow(10,9);
   }
   

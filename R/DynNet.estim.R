@@ -256,6 +256,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
     if(predict_ui){
     ui_hat <- matrix(NA,length(data$m_i),sum(data$q)+sum(data$q0))
     maxiter=100
+
     for(i in 1:length(data$m_i)){
       optim_ui<- try(marqLevAlg::marqLevAlg(b = ui, paraOpt = paras$paraOpt, fn = Loglik2, nproc = nproc, .packages = NULL, epsa=epsa, epsb=epsb, epsd=epsd,
                                          maxiter=maxiter, print.info = F,  minimize = FALSE,
@@ -272,7 +273,11 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                                          nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2), 
                                          clustertype="FORK", ii=i)
                   ,silent = T)
-      ui_hat[i,] <- optim_ui$b
+      if(inherits(temp ,'try-error')){
+        ui_hat[i,] <- rep(NA,dim(ui_hat)[2])
+      }else{
+        ui_hat[i,] <- optim_ui$b
+      }
     }
     est$ui_hat <- ui_hat
   }else{
