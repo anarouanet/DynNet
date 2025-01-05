@@ -96,8 +96,12 @@ predict.DynNet <- function(object, newdata, TimeDiscretization=TRUE, MCnr = 10, 
     fixed.survival.models <- strsplit(gsub("[[:space:]]","",as.character(fixed.survival)),"~")[[2]]
     fixed.survival.models <- as.vector(strsplit(fixed.survival.models,"[|]")[[1]]) 
     ### pre-processing of covariates in interaction with Y in survival models
-    interactionY.survival.models =strsplit(gsub("[[:space:]]","",as.character(interactionY.survival)),"~")[[2]]
-    interactionY.survival.models<- as.vector(strsplit(interactionY.survival.models,"[|]")[[1]]) 
+    if(length(interactionY.survival)>0){
+      interactionY.survival.models =strsplit(gsub("[[:space:]]","",as.character(interactionY.survival)),"~")[[2]]
+      interactionY.survival.models<- as.vector(strsplit(interactionY.survival.models,"[|]")[[1]]) 
+    }else{
+      interactionY.survival.models <- NULL
+    }
   }else{
     fixed.survival.models <- NULL
     interactionY.survival.models <- NULL

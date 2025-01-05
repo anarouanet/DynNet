@@ -27,6 +27,7 @@
 #' @param interactionY.survival.models interactions with Y in the survival models
 #' @param predict_ui boolean indicating if bayesian estimates of random effects should be computed (FALSE by default)
 #' @param makepred indicates if predictions in the real scales of outcomes have to be done
+#' @param MCnr_pred number of MC replicates to compute the integral over random effects
 #' @param MCnr number of QMC replicates to compute the integral over random effects
 #' @param type_int type of Monte Carlo integration method to use
 #' @param paras.ini initial values for parameters, default values is NULL
