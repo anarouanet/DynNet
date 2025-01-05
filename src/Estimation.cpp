@@ -2560,7 +2560,7 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
     p += m_is[n];
   }
   if(loglik <= -pow(10,9)){
-    Rcout << "   loglik "<< loglik<<endl;
+    //Rcout << "   loglik "<< loglik<<endl;
     loglik=-pow(10,9);
   }
   

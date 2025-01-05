@@ -61,7 +61,7 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
                            DeltaT, outcomes, nD, mapping.to.LP, link, knots=NULL, subject, data, Time, 
                            Survdata = NULL, basehaz = NULL, knots_surv=NULL, assoc = 0, truncation = FALSE, fixed.survival.models = NULL, 
                            interactionY.survival.models = NULL, predict_ui = NULL, 
-                           makepred, MCnr, MCnr2, type_int = NULL, sequence = NULL, ind_seq_i = NULL, nmes = NULL, cholesky= FALSE,
+                           makepred, MCnr_pred, MCnr, MCnr2, type_int = NULL, sequence = NULL, ind_seq_i = NULL, nmes = NULL, cholesky= FALSE,
                            paras.ini= NULL, indexparaFixeUser, paraFixeUser, maxiter, zitr, ide, univarmaxiter, nproc = 1, 
                            epsa =0.0001, epsb = 0.0001, epsd= 0.001, print.info = FALSE, TimeDiscretization = TRUE, 
                            Tentry = NULL, Event = NULL, StatusEvent = NULL, ...)
@@ -221,7 +221,7 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
                     x = data_F$x, z = data_F$z, q = data_F$q, cholesky = cholesky, nb_paraD = data_F$nb_paraD, x0 = data_F$x0, z0 = data_F$z0,
                     q0 = data_F$q0, if_link = if_link, tau = data_F$tau,
                     tau_is=data_F$tau_is, modA_mat = data_F$modA_mat, DeltaT=DeltaT, 
-                    MCnr = MCnr, minY=data_F$minY, maxY=data_F$maxY, knots=data_F$knots, data_F$degree, epsPred = 1.e-9)
+                    MCnr = MCnr_pred, minY=data_F$minY, maxY=data_F$maxY, knots=data_F$knots, data_F$degree, epsPred = 1.e-9)
     
     kk <- 1
     for(k in 1: K){

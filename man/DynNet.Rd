@@ -17,8 +17,8 @@ DynNet(
   subject,
   data,
   seed = NULL,
-  TimeDiscretization = TRUE,
-  cholesky = FALSE,
+  TimeDiscretization = FALSE,
+  cholesky = TRUE,
   predict_ui = FALSE,
   ...
 )
@@ -85,6 +85,8 @@ DynNet(
 
 \item{\code{epsc}}{ threshold for the convergence criterion on the derivatives}
 
+\item{\code{MCnr_pred}}{ number of replicates to compute the predictions in the real scales of the outcomes (backward transformation because of the link functions, 30 by default)}
+
 \item{\code{MCnr}}{ number Quasi-Monte Carlo replicates for the integration over random effects}
 
 \item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
@@ -122,7 +124,7 @@ DynNet(
 
 \item{TimeDiscretization}{a boolean indicating if the initial time has to be discretized (TRUE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.}
 
-\item{cholesky}{logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE) or the correlation (FALSE, by default)}
+\item{cholesky}{logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE, by default) or the correlation (FALSE)}
 
 \item{predict_ui}{boolean indicating if bayesian estimates of random effects should be computed (FALSE by default)}
 
@@ -185,7 +187,6 @@ mod1 <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
                             univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
               TimeDiscretization=FALSE,
               Time = "time",
-              cholesky=TRUE,
               subject = "id",
               data = data
 )
@@ -216,7 +217,6 @@ mod2 <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
                            univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
              TimeDiscretization=FALSE,
              Time = "time",
-             cholesky=TRUE,
              subject = "id",
              data = data
 )
@@ -244,7 +244,6 @@ mod <-  DynNet(structural.model = list(fixed.LP0 = ~ 1 + C1 + C2|1 + C1 + C2,
                          univarmaxiter = 7, epsa = 1e-5, epsb = 1e-5, epsd = 1e-5),
            TimeDiscretization=FALSE,
            Time = "time",
-           cholesky=TRUE,
            subject = "id",
            data = data
          )
@@ -269,7 +268,6 @@ res <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
                        univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
          TimeDiscretization=FALSE,
          Time = "time",
-         cholesky=TRUE,
          subject = "id",
          data = data
   )

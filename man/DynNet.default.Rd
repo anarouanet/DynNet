@@ -28,6 +28,7 @@ DynNet.default(
   interactionY.survival.models = NULL,
   predict_ui = NULL,
   makepred,
+  MCnr_pred,
   MCnr,
   MCnr2,
   type_int = NULL,

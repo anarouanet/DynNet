@@ -75,6 +75,8 @@
 #' 
 #' \item{\code{epsc}}{ threshold for the convergence criterion on the derivatives}
 #' 
+#' \item{\code{MCnr_pred}}{ number of replicates to compute the predictions in the real scales of the outcomes (backward transformation because of the link functions, 30 by default)}
+#'
 #' \item{\code{MCnr}}{ number Quasi-Monte Carlo replicates for the integration over random effects}
 #' 
 #' \item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
@@ -96,7 +98,7 @@
 #' @param Time indicates the name of the covariate representing the time 
 #' @param subject indicates the name of the covariate representing the grouping structure
 #' @param data indicates the data frame containing all the variables for estimating the model.
-#' @param cholesky logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE) or the correlation (FALSE, by default)
+#' @param cholesky logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE, by default) or the correlation (FALSE)
 #' @param Tentry name of the variable of entry time
 #' @param Event name of the variable of event time
 #' @param StatusEvent name of the variable of event status
@@ -146,7 +148,6 @@
 #'                             univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
 #'               TimeDiscretization=FALSE,
 #'               Time = "time",
-#'               cholesky=TRUE,
 #'               subject = "id",
 #'               data = data
 #' )
@@ -177,7 +178,6 @@
 #'                            univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
 #'              TimeDiscretization=FALSE,
 #'              Time = "time",
-#'              cholesky=TRUE,
 #'              subject = "id",
 #'              data = data
 #' )
@@ -206,7 +206,6 @@
 #'                          univarmaxiter = 7, epsa = 1e-5, epsb = 1e-5, epsd = 1e-5),
 #'            TimeDiscretization=FALSE,
 #'            Time = "time",
-#'            cholesky=TRUE,
 #'            subject = "id",
 #'            data = data
 #'          )
@@ -231,7 +230,6 @@
 #'                        univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
 #'          TimeDiscretization=FALSE,
 #'          Time = "time",
-#'          cholesky=TRUE,
 #'          subject = "id",
 #'          data = data
 #'   )
@@ -241,7 +239,7 @@
 
 DynNet <- function(structural.model, measurement.model, parameters, 
                    option, Time, Tentry ="Tentry", Event = "Event", StatusEvent = "StatusEvent", basehaz = NULL, subject, data, seed=NULL, 
-                   TimeDiscretization = TRUE, cholesky=FALSE, predict_ui = FALSE,...){
+                   TimeDiscretization = FALSE, cholesky=TRUE, predict_ui = FALSE,...){
 
   cl <- match.call()
   ptm <- proc.time()  
@@ -283,6 +281,10 @@ DynNet <- function(structural.model, measurement.model, parameters,
   if(is.null(option$makepred)){
     option$makepred <- F
   }
+  if(is.null(option$MCnr_pred)){
+    option$MCnr_pred <- 30
+  }
+  
 
   survival= FALSE
   if(!is.null(structural.model$fixed.survival)){
@@ -354,6 +356,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   paras.ini <- parameters$paras.ini
   ## component of option
   makepred <- option$makepred
+
   MCnr <- option$MCnr
 
   type_int <- option$type_int
@@ -606,7 +609,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
                         nD = nD, mapping.to.LP = mapping.to.LP, link = link, knots = knots, subject = subject, data = data, Time = Time, 
                         predict_ui = predict_ui, Survdata = Survdata, basehaz = basehaz, knots_surv = knots_surv, assoc = assoc, truncation = truncation, 
                         fixed.survival.models = fixed.survival.models, interactionY.survival.models = interactionY.survival.models,
-                        makepred = option$makepred, MCnr = option$MCnr, MCnr2 = option$MCnr2, type_int = option$type_int, sequence = sequence, ind_seq_i = ind_seq_i, nmes = nmes, cholesky = cholesky,
+                        makepred = option$makepred, MCnr_pred = option$MCnr_pred, MCnr = option$MCnr, MCnr2 = option$MCnr2, type_int = option$type_int, sequence = sequence, ind_seq_i = ind_seq_i, nmes = nmes, cholesky = cholesky,
                         paras.ini= paras.ini, paraFixeUser = paraFixeUser, indexparaFixeUser = indexparaFixeUser,  
                         maxiter = maxiter, zitr = zitr, ide = ide0, univarmaxiter = univarmaxiter, nproc = nproc, epsa = epsa, epsb = epsb, epsd = epsd, 
                         print.info = print.info, TimeDiscretization = TimeDiscretization, Tentry = Tentry, Event = Event, StatusEvent = StatusEvent)
