@@ -20,10 +20,9 @@ arma::mat predi(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
                 List& knots, arma::vec degree, int MCnr, double eps){
 
   // to call R fonction from C++ code :
-  Rcpp::Environment base("package:DynNet");
-  Rcpp::Function f = base["f_trSpline"]; // make visible R function f_trSpline
-
-  Rcpp::Function g = base["f_mvrnorm"]; // make visible R function f_mvrnorm
+  Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+  Rcpp::Function f = pkg["f_trSpline"]; // make visible R function f_trSpline
+  Rcpp::Function g = pkg["f_mvrnorm"];// make visible R function f_mvrnorm
 
 
   //Ytild_i := observations  Xi := latent processes
@@ -342,9 +341,9 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
                 List& knots, arma::vec degree, int MCnr, double eps, arma::colvec& ui, arma::colvec& vi){
   
   // to call R fonction from C++ code :
-  Rcpp::Environment base("package:DynNet");
-  Rcpp::Function f = base["f_trSpline"]; // make visible R function f_trSpline
-  Rcpp::Function g = base["f_mvrnorm"]; // make visible R function f_mvrnorm
+  Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+  Rcpp::Function f = pkg["f_trSpline"]; // make visible R function f_trSpline
+  Rcpp::Function g = pkg["f_mvrnorm"];// make visible R function f_mvrnorm
   
   
   //Ytild_i := observations  Xi := latent processes
@@ -756,8 +755,6 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
 }
 
 
-
-
 //==============================================================================================================================
 /* ******************************************************
 Predictions for overall individuals
@@ -805,8 +802,8 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
                List& knots, arma::vec degree, double epsPred, arma::mat& ui_hat, int nE=0){
 
   // appel de fonctions externe R
-  Rcpp::Environment base("package:DynNet");
-  Rcpp::Function f = base["f_trSpline"];
+  Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+  Rcpp::Function f = pkg["f_trSpline"];
 
   //Rprintf("Begining of predictions n \n");
   mat pred_Y = zeros(sum(m_is),7*K);
@@ -994,8 +991,8 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
                 List& knots, arma::vec degree, double epsPred){
    
    // appel de fonctions externe R
-   Rcpp::Environment base("package:DynNet");
-   Rcpp::Function f = base["f_trSpline"];
+   Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+   Rcpp::Function f = pkg["f_trSpline"];
    
    //Rprintf("Begining of predictions n \n");
    mat pred_Y = zeros(sum(m_is),7*K);
@@ -1136,10 +1133,9 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
                 List& knots, arma::vec degree, int MCnr, double eps){
   
   // to call R fonction from C++ code :
-  Rcpp::Environment base("package:CInLPN");
-  Rcpp::Function f = base["f_trSpline"]; // make visible R function f_trSpline
-  
-  Rcpp::Function g = base["f_mvrnorm"]; // make visible R function f_mvrnorm
+  Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+  Rcpp::Function f = pkg["f_trSpline"]; // make visible R function f_trSpline
+  Rcpp::Function g = pkg["f_mvrnorm"]; // make visible R function f_mvrnorm
   
   
   //Ytild_i := observations  Xi := latent processes
@@ -1388,8 +1384,8 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
                 List& knots, arma::vec degree, double epsPred){
    
    // appel de fonctions externe R
-   Rcpp::Environment base("package:CInLPN");
-   Rcpp::Function f = base["f_trSpline"];
+   Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+   Rcpp::Function f = pkg["f_trSpline"];
    
    
    //Rprintf("Begining of predictions n \n");

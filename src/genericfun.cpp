@@ -1505,8 +1505,8 @@ arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i,int delta_i, ar
  Generate multivariate gaussian vector with mean m and SD = LLt
 ==============================================================*/
 arma::mat mvnorm(int seed, arma::vec m, arma::mat SD){
-  Rcpp::Environment base("package:DynNet");
-  Rcpp::Function g = base["f_mvrnorm"];
+  Rcpp::Environment pkg = Environment::namespace_env("DynNet");
+  Rcpp::Function g = pkg["f_mvrnorm"]; // make visible R function f_mvrnorm
   vec x = as<arma::vec>(wrap(g(Rcpp::_["seed"] = seed, Rcpp::_["m"] = m, Rcpp::_["sd"] = SD)));
   return(x);
 }

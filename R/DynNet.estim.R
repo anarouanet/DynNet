@@ -253,19 +253,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
 
   ui=rep(0,sum(data$q)+sum(data$q0))
   #if(pred & (data$nE>0 || any(if_link==2))){
-    if(predict_ui ){
-    # temp <- Loglik2(K = K, nD = nD, mapping =  mapping.to.LP, paraOpt = paras$paraOpt,  paraFixe = paras$paraFixe, posfix = paras$posfix, paras_k = paras$npara_k,
-    #                sequence = as.matrix(paras$sequence), type_int = paras$type_int, ind_seq_i = paras$ind_seq_i, MCnr = MCnr, nmes = nmes,
-    #                m_is = data$m_i, Mod_MatrixY = data$Mod.MatrixY, Mod_MatrixYprim = data$Mod.MatrixYprim, df=data$df,
-    #                x = data$x, z = data$z, q = data$q, nb_paraD = data$nb_paraD,
-    #                x0 = data$x0, z0 = data$z0, q0 = data$q0, cholesky = cholesky,
-    #                data_surv = as.matrix(data_surv), data_surv_intY = as.matrix(data$intYsurv), nYsurv = data$nYsurv, basehaz = ifelse(paras$basehaz=="Weibull", 0, 1), knots_surv = paras$knots_surv, 
-    #                np_surv = paras$np_surv, survival = (data$nE>0), assoc =  paras$assoc, truncation = paras$truncation, 
-    #                nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2),
-    #                if_link = if_link, zitr = data$zitr, ide = data$ide,
-    #                tau = data$tau, tau_is=data$tau_is, 
-    #                modA_mat = data$modA_mat, DeltaT, ii=length(data$m_i)+10, ui=ui)
-    
+    if(predict_ui){
     ui_hat <- matrix(NA,length(data$m_i),sum(data$q)+sum(data$q0))
     maxiter=100
     for(i in 1:length(data$m_i)){

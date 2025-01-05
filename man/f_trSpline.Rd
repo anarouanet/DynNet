@@ -2,7 +2,7 @@
 % Please edit documentation in R/f_trSpline.R
 \name{f_trSpline}
 \alias{f_trSpline}
-\title{Function that compute  transformaitions  by I-splines basis and their derivates}
+\title{Function that computes transformations by I-splines basis and their derivatives}
 \usage{
 f_trSpline(y, minY, maxY, knots, degree, paras)
 }
@@ -23,5 +23,5 @@ f_trSpline(y, minY, maxY, knots, degree, paras)
 a matrix
 }
 \description{
-Function that compute  transformaitions  by I-splines basis and their derivates
+Function that computes transformations by I-splines basis and their derivatives
 }

@@ -1,4 +1,4 @@
-#' Function that compute  transformaitions  by I-splines basis and their derivates
+#' Function that computes transformations by I-splines basis and their derivatives
 #'
 #' @param y outcomes in real scales
 #' @param minY minimum of outcome y

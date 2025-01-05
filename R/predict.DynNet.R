@@ -2,14 +2,14 @@
 #'
 #' @param object DynNet object
 #' @param newdata dataset
-#' @param MCnr an integer that gives the number of Monte Carlo iterations
+#' @param MCnr_pred an integer that gives the number of Monte Carlo iterations
 #' @param TimeDiscretization a boolean indicating if the initial time has to be discretized (TRUE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.
 #' @param ui_hat matrix of bayesian estimates of random effects
 #' @param \dots optional parameters
 #'
 #' @return list of marginal and subject-specific predictions
 #' @export
-predict.DynNet <- function(object, newdata, TimeDiscretization=TRUE, MCnr = 10, ui_hat = NULL,...){
+predict.DynNet <- function(object, newdata, TimeDiscretization=TRUE, MCnr_pred = 10, ui_hat = NULL,...){
   
   model <- object
   cl <- match.call()
@@ -155,13 +155,13 @@ predict.DynNet <- function(object, newdata, TimeDiscretization=TRUE, MCnr = 10, 
   #                 q0 = data_F$q0, if_link = if_link, tau = data_F$tau,
   #                 tau_is=data_F$tau_is, modA_mat = data_F$modA_mat, DeltaT=DeltaT, 
   #                 MCnr = MCnr, model$minY, model$maxY, data_F$knots, data_F$degree, epsPred = 1.e-9)
-  
-  Predict <- pred(K = K, nD = nD, mapping = mapping.to.LP, paras = model$coefficients, cholesky=FALSE,
+
+  Predict <- pred(K = K, nD = nD, mapping = mapping.to.LP, paras = model$coefficients, cholesky=T,
                   m_is= data_F$m_i, Mod_MatrixY = data_F$Mod.MatrixY, df= data_F$df,
                   x = data_F$x, z = data_F$z, q = data_F$q, nb_paraD = data_F$nb_paraD, x0 = data_F$x0, z0 = data_F$z0,
                   q0 = data_F$q0, if_link = if_link, tau = data_F$tau,
                   tau_is=data_F$tau_is, modA_mat = data_F$modA_mat, DeltaT=DeltaT, 
-                  MCnr = MCnr, minY = data_F$minY, maxY = data_F$maxY, knots = data_F$knots, degree = data_F$degree, epsPred = 1.e-9, ui_hat = model$ui_hat)
+                  MCnr = MCnr_pred, minY = data_F$minY, maxY = data_F$maxY, knots = data_F$knots, degree = data_F$degree, epsPred = 1.e-9, ui_hat = model$ui_hat)
   
   
   # pred.col(ii+1) = pred_MYFull.col(k); //marginal Y prediction E(Y) ***
