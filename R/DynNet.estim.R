@@ -32,6 +32,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
   # package loading
   
   debug=0
+  cat("debug")
   if(debug==1 || maxiter == -1){
     
     ptm<-proc.time()
