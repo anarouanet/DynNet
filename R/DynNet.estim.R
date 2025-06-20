@@ -32,7 +32,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
   # package loading
   
   debug=0
-  cat("debug")
+
   if(debug==1 || maxiter == -1){
     
     ptm<-proc.time()
@@ -48,7 +48,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                    if_link = if_link, zitr = data$zitr, ide = data$ide,
                    tau = data$tau, tau_is=data$tau_is, 
                    modA_mat = data$modA_mat, DeltaT, ii=length(data$m_i)+10)
-browser()
+
     time=proc.time()-ptm
     h=floor(time[3]/3600)
     m=floor((time[3]-h*3600)/60)
