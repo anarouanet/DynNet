@@ -36,7 +36,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
   if(debug==1 || maxiter == -1){
     
     ptm<-proc.time()
-
+    browser()
     temp <- Loglik(K = K, nD = nD, mapping =  mapping.to.LP, paraOpt = paras$paraOpt,  paraFixe = paras$paraFixe, posfix = paras$posfix, paras_k = paras$npara_k,
                    sequence = as.matrix(paras$sequence), type_int = paras$type_int, ind_seq_i = paras$ind_seq_i, MCnr = MCnr, nmes = nmes,
                    m_is = data$m_i, Mod_MatrixY = data$Mod.MatrixY, Mod_MatrixYprim = data$Mod.MatrixYprim, df=data$df,
@@ -48,7 +48,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                    if_link = if_link, zitr = data$zitr, ide = data$ide,
                    tau = data$tau, tau_is=data$tau_is, 
                    modA_mat = data$modA_mat, DeltaT, ii=length(data$m_i)+10)
-browser()
+
     time=proc.time()-ptm
     h=floor(time[3]/3600)
     m=floor((time[3]-h*3600)/60)
