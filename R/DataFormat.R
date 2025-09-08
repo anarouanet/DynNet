@@ -86,7 +86,6 @@ f.link <- function(outcomes, Y,link=NULL, knots = NULL, na.action = 'na.pass'){
       df <-c(df, ncol(Imat))
       degree[k] <- 0 # conventionnellement
     }else{
-      
       linkSpe[[k]] <- strsplit(gsub("[[:space:]]","",link[k]),"[-]")[[1]]
       temp <- try( linkSpe[[k]][1] <- as.numeric(linkSpe[[k]][1]),silent = FALSE)
       if(inherits(temp ,'try-error') | temp < 2){
@@ -117,7 +116,6 @@ f.link <- function(outcomes, Y,link=NULL, knots = NULL, na.action = 'na.pass'){
         stop("When specified as equidistant, there is no need to specify manually the position of knots")
       }
       
-      #
       if(linkSpe[[k]][2] == "quant" & (!is.null(knots[[k]]))){
         stop("When specified as placed at quantiles, there is no need to specify manually the position of knots")
       }
@@ -127,7 +125,6 @@ f.link <- function(outcomes, Y,link=NULL, knots = NULL, na.action = 'na.pass'){
       if(linkSpe[[k]][2] == "equi"){
         knots[[k]] <- seq(from = minY[k], to = maxY[k], by = (maxY[k]-minY[k])/(nknots-1))
       }
-      
       ## if two quantiles are equal
       if(nknots<3) 
         stop("Splines for the outcome transformation should contain at least 3 knots (including 1 internal knot)")
@@ -150,7 +147,6 @@ f.link <- function(outcomes, Y,link=NULL, knots = NULL, na.action = 'na.pass'){
       MsMat <- model.matrix(as.formula(modMSpline), data = Y, na.action = na.action)
       colnamesY <- c(colnamesY, paste(outcomes[k],link[k], seq(1,ncol(IsMat)), sep = "."))
       colnamesYPrim <- c(colnamesYPrim, paste(outcomes[k],link[k], seq(1,ncol(MsMat)), sep = "."))
-      
       Mod.MatrixY <- cbind(Mod.MatrixY, IsMat)
       Mod.MatrixYprim <- cbind(Mod.MatrixYprim, MsMat)
       df <-c(df, ncol(IsMat))
@@ -210,7 +206,7 @@ DataFormat <- function(data, subject, fixed_X0.models , randoms_X0.models , fixe
                        randoms_DeltaX.models, mod_trans.model, link = NULL, knots = NULL, zitr = NULL, ide = NULL, 
                        outcomes, nD, Time, Survdata = NULL, basehaz = NULL, fixed.survival.models = NULL, 
                        interactionY.survival.models = NULL, DeltaT, assoc, truncation){
-  
+
   cl <- match.call()
   colnames<-colnames(data)
   id_and_Time <- data[,c(subject,Time)]
@@ -271,7 +267,7 @@ DataFormat <- function(data, subject, fixed_X0.models , randoms_X0.models , fixe
   
   
   Tmax <- max(tau_is,na.rm = TRUE)
-  
+
   if(!is.null(Survdata) && assoc %in%c(3,5))
     Tmax <- max(Tmax, round(max(Survdata$Event,na.rm = TRUE)/DeltaT))#If
   
@@ -324,7 +320,7 @@ DataFormat <- function(data, subject, fixed_X0.models , randoms_X0.models , fixe
     x_cov <- rbind(x_cov, data_x_cov_i)
   }
   x_cov <- x_cov[order(x_cov[,subject],x_cov[,Time]),]
-  
+
   ##only for x0 #####
   x0 <- NULL
   nb_x0_n <- NULL
@@ -362,7 +358,6 @@ DataFormat <- function(data, subject, fixed_X0.models , randoms_X0.models , fixe
   x0 <- as.matrix(x0[,-c(1)])
   colnames(x0) <- colnames[-c(1)]
   #   x0 <- as.matrix(x0)
-  
   
   ##only for x #####
   x <- NULL
