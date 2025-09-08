@@ -251,7 +251,6 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
     #                  nb_paraDw= data$nb_paraDw, tau = data$tau, tau_is=data$tau_is))    
   }
 
-
   ui=rep(0,sum(data$q)+sum(data$q0))
   #if(pred & (data$nE>0 || any(if_link==2))){
     if(predict_ui){

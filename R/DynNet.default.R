@@ -390,7 +390,6 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
   rownames(res$coefficients) <- res$colnames
   colnames(res$coefficients) <- "Coef."
   
-  
   res$loglik <- est$fn.value
   res$AIC <- -2*est$fn.value + 2*length(est$b)
   res$BIC <- -2*est$fn.value + log(res$N)*length(est$b)

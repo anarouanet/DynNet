@@ -77,7 +77,7 @@ DynNet(
 
 \item{option}{a list of arguments for the optimization procedure: \describe{
 
-\item{\code{maxiter}}{ maximum number of iterations}
+\item{\code{maxiter}}{ maximum number of iterations (100 by default)}
 
 \item{\code{epsa}}{ threshold for the convergence criterion on the parameters}
 

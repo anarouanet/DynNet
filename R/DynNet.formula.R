@@ -67,7 +67,7 @@
 #' 
 #' @param option a list of arguments for the optimization procedure: \describe{
 #' 
-#' \item{\code{maxiter}}{ maximum number of iterations}
+#' \item{\code{maxiter}}{ maximum number of iterations (100 by default)}
 #' 
 #' \item{\code{epsa}}{ threshold for the convergence criterion on the parameters}
 #' 
@@ -311,7 +311,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   #   option$parallel <- FALSE
   # }
   if(is.null(option$maxiter)){
-    option$maxiter <- 500
+    option$maxiter <- 100
   }
   if(is.null(option$univarmaxiter)){
     option$univarmaxiter <- 25
