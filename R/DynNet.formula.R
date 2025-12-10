@@ -321,7 +321,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   }
   
   if(option$nproc>1 & option$parallel==F){
-    warning("nproc argument is ignored because parallel=F")
+    message("nproc argument is ignored because parallel=F")
     option$nproc <- 1
   }
 
