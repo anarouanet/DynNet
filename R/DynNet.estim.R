@@ -69,6 +69,9 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
     
       ptm<-proc.time()#marqLevAlg::marqLevAlg
 
+    if(.Platform$OS.type == "windows")cltyp<-"PSOCK"
+    else cltyp<-"FORK"
+
       temp <- try(marqLevAlg::marqLevAlg(b = paras$paraOpt, fn = Loglik, nproc = nproc, .packages = NULL, epsa=epsa, epsb=epsb, epsd=epsd,
                                          maxiter=maxiter, print.info = print.info,  minimize = FALSE,
                                          DeltaT=DeltaT, paraFixe = paras$paraFixe, posfix = paras$posfix,
@@ -81,7 +84,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                                          modA_mat = data$modA_mat, data_surv = as.matrix(data_surv), data_surv_intY = as.matrix(data$intYsurv), nYsurv = data$nYsurv, basehaz = ifelse(paras$basehaz=="Weibull", 0, 1), knots_surv = paras$knots_surv, 
                                          np_surv = paras$np_surv, survival = (data$nE>0), assoc =  paras$assoc, truncation = paras$truncation, 
                                          nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2), 
-                                         clustertype="FORK", ii=length(data$m_i)+10)
+                                         clustertype=cltyp, ii=length(data$m_i)+10)
                   ,silent = FALSE)
       
       time=proc.time()-ptm
@@ -240,6 +243,8 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
     maxiter=100
 #INDIVIDUAL PREDICTIONS  HAT U_I
     for(i in 1:length(data$m_i)){
+      if(.Platform$OS.type == "windows")cltyp<-"PSOCK"
+    else cltyp<-"FORK"
       optim_ui<- try(marqLevAlg::marqLevAlg(b = ui, paraOpt = paras$paraOpt, fn = Loglik2, nproc = nproc, .packages = NULL, epsa=epsa, epsb=epsb, epsd=epsd,
                                          maxiter=maxiter, print.info = F,  minimize = FALSE,
                                          DeltaT=DeltaT, paraFixe = paras$paraFixe, posfix = paras$posfix,
@@ -253,7 +258,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                                          nYsurv = data$nYsurv, basehaz = ifelse(paras$basehaz=="Weibull", 0, 1), knots_surv = paras$knots_surv, 
                                          np_surv = paras$np_surv, survival = (data$nE>0), assoc =  paras$assoc, truncation = paras$truncation, 
                                          nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2), 
-                                         clustertype="FORK", ii=i)
+                                         clustertype=cltyp, ii=i)
                   ,silent = T)
       if(inherits(temp ,'try-error')){
         ui_hat[i,] <- rep(NA,dim(ui_hat)[2])
