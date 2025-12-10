@@ -307,9 +307,9 @@ DynNet <- function(structural.model, measurement.model, parameters,
   #  option$type_int <- "montecarlo"
   #}
   
-  # if(is.null(option$parallel)){
-  #   option$parallel <- FALSE
-  # }
+  if(is.null(option$parallel)){
+     option$parallel <- FALSE
+   }
   if(is.null(option$maxiter)){
     option$maxiter <- 100
   }
