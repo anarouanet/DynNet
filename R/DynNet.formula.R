@@ -320,7 +320,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
     option$nproc <- 1
   }
   
-  if(option$nproc>1 & option$boot==F){
+  if(option$nproc>1 & option$parallel==F){
     warning("nproc argument is ignored because boot=F")
     option$nproc <- 1
   }
