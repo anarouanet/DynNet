@@ -641,7 +641,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   #### call of DynNet.default function to compute estimation and predictions
   est <- DynNet.default(fixed_X0.models = fixed_X0.models, fixed_DeltaX.models = fixed_DeltaX.models, randoms_X0.models = randoms_X0.models, 
                         randoms_DeltaX.models = randoms_DeltaX.models, mod_trans.model = mod_trans.model, DeltaT = DeltaT , outcomes = outcomes,
-                        nD = nD, mapping.to.LP = mapping.to.LP,nL,mapping.to.LP2, link = link, knots = knots, subject = subject, data = data, Time = Time, 
+                        nD = nD, mapping.to.LP = mapping.to.LP,nL=nL,mapping.to.LP2=mapping.to.LP2, link = link, knots = knots, subject = subject, data = data, Time = Time, 
                         predict_ui = predict_ui, Survdata = Survdata, basehaz = basehaz, knots_surv = knots_surv, assoc = assoc, truncation = truncation, 
                         fixed.survival.models = fixed.survival.models, interactionY.survival.models = interactionY.survival.models,
                         makepred = option$makepred, MCnr_pred = option$MCnr_pred, MCnr = option$MCnr, MCnr2 = option$MCnr2, type_int = option$type_int, sequence = sequence, ind_seq_i = ind_seq_i, nmes = nmes, cholesky = cholesky,
