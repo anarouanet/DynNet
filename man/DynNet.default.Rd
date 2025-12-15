@@ -14,6 +14,8 @@ DynNet.default(
   outcomes,
   nD,
   mapping.to.LP,
+  nL = NULL,
+  mapping.to.LP2 = NULL,
   link,
   knots = NULL,
   subject,
@@ -76,7 +78,11 @@ the temporal influences between latent processes}
 \item{nD}{number of the latent processes}
 
 \item{mapping.to.LP}{indicates which outcome measured which latent process, it is a mapping table between
-outcomes and latents processes}
+outcomes and latents processes
+@param mapping.to.LP indicates which outcome measured which exogenous latent process, it is a mapping table between
+outcomes and enogenous latents processes (only used for structural model)}
+
+\item{nL}{number of exogenous latent processes for formative structural model}
 
 \item{link}{indicates link used to transform outcome}
 
