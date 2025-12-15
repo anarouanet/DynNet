@@ -11,11 +11,8 @@
 #' @param DeltaT indicates the discretization step
 #' @param outcomes indicates names of the outcomes
 #' @param nD number of the latent processes
-#' @param nL number of exogenous latent processes for formative structural model
 #' @param mapping.to.LP indicates which outcome measured which latent process, it is a mapping table between
 #'  outcomes and latents processes
-#'  @param mapping.to.LP indicates which outcome measured which exogenous latent process, it is a mapping table between
-#'  outcomes and enogenous latents processes (only used for structural model)
 #' @param link indicates link used to transform outcome
 #' @param knots indicates position of knots used to transform outcomes 
 #' @param subject indicates the name of the covariate representing the grouping structure
@@ -62,7 +59,7 @@
 #' @importFrom survival Surv
 #' 
 DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.models, randoms_DeltaX.models, mod_trans.model, 
-                           DeltaT, outcomes, nD, mapping.to.LP,nL=NULL, mapping.to.LP2=NULL, link, knots=NULL, subject, data, Time, 
+                           DeltaT, outcomes, nD, mapping.to.LP, link, knots=NULL, subject, data, Time, 
                            Survdata = NULL, basehaz = NULL, knots_surv=NULL, assoc = 0, truncation = FALSE, fixed.survival.models = NULL, 
                            interactionY.survival.models = NULL, predict_ui = NULL, 
                            makepred, MCnr_pred, MCnr, MCnr2, type_int = NULL, sequence = NULL, ind_seq_i = NULL, nmes = NULL, cholesky= FALSE,
@@ -121,6 +118,7 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
   
   # ### creation of arguments:  Initialising parameters
   if(K>1 & is.null(paras.ini)){
+    
     paras.ini <- f_paras.ini(data = data, outcomes = outcomes, mapped.to.LP = mapping.to.LP, fixed_X0.models = fixed_X0.models, fixed_DeltaX.models = fixed_DeltaX.models,  
                              randoms_DeltaX.models = randoms_DeltaX.models, nb_RE = nb_RE, mod_trans.model = mod_trans.model, 
                              subject = subject, MCnr = MCnr, type_int = type_int,
@@ -128,15 +126,10 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
                              DeltaT = DeltaT, maxiter = univarmaxiter, epsd = epsd, nproc = nproc, print.info = print.info, 
                              TimeDiscretization = TimeDiscretization, fixed.survival.models = fixed.survival.models, 
                              Tentry = Tentry, Event = Event, StatusEvent = StatusEvent, assocT = assocT, truncation = truncation)
-    
-    if(!is.null(nL)){#formative structure
-      w <- rep(1,nL)/rle(mapping.to.LP2)$length
-      paras.ini <- c(paras.ini,w)
-    }
-    }
+  }
   npara_k <- sapply(outcomes, function(x) length(grep(x, names(data.frame(data_F$Mod.MatrixY)))))
   
-  paras <- Parametre(K=K, nD = nD,nL=nL, vec_ncol_x0n, n_col_x, nb_RE, indexparaFixeUser = indexparaFixeUser, 
+  paras <- Parametre(K=K, nD = nD, vec_ncol_x0n, n_col_x, nb_RE, indexparaFixeUser = indexparaFixeUser, 
                      paraFixeUser = paraFixeUser, L = L, ncolMod.MatrixY = ncolMod.MatrixY, paras.ini=paras.ini, 
                      link = link, npara_k = npara_k, 
                      Survdata = Survdata, basehaz = basehaz, knots_surv = knots_surv, assoc = assoc, truncation = truncation,
@@ -154,6 +147,26 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
   
   #add zitr, ide  dans estim(). What about knots? What in dataF
   if(any(link=="thresholds")|| !is.null(Survdata) || !is.null(type_int) || !is.null(MCnr)){
+    #  nmes <- c()
+    #  for (i in 1:length(unique(data$id))){
+    #    for(k in 1:K){
+    #      ind = which(names(data)==outcomes[k])
+    #      nmes <- c(nmes, length(which(data$id==unique(data$id)[i] & !is.na(data[,ind]))))
+    #    }
+    #  }
+    # nmes <- unique(nmes)
+    # nmes <- nmes[order(nmes)]
+    # 
+    # sequence <- matrix(NA, MCnr*length(nmes), max(nmes))
+    # 
+    # for(j in 1:length(nmes)){
+    #   if (type_int == "sobol") {
+    #     Seq <- randtoolbox::sobol(MCnr, dim = nmes[j], normal = TRUE, scrambling = 1)
+    #   } else if (type_int == "halton") {
+    #     Seq <- randtoolbox::halton(MCnr, dim = nmes[j], normal = TRUE)
+    #   }
+    #   sequence[((j-1)*MCnr+1):(j*MCnr), 1:nmes[j]] <- Seq
+    # }
     
     paras$sequence <- sequence
     paras$type_int <- ifelse(type_int=="halton",1,ifelse(type_int=="sobol",2,ifelse(type_int=="torus",3,ifelse(type_int=="MC",-1,0))))
@@ -173,7 +186,7 @@ DynNet.default <- function(fixed_X0.models, fixed_DeltaX.models, randoms_X0.mode
   }
   
   # estimation
-  est <- DynNet.estim(K = K, nD = nD, mapping.to.LP = mapping.to.LP,nL=nL,mapping.to.LP2=mapping.to.LP2, data = data_F, if_link = if_link, cholesky = cholesky,
+  est <- DynNet.estim(K = K, nD = nD, mapping.to.LP = mapping.to.LP, data = data_F, if_link = if_link, cholesky = cholesky,
                       DeltaT = DeltaT, MCnr = MCnr, MCnr2 = MCnr2, nmes = nmes, data_surv = Survdata,
                       paras = paras, maxiter = maxiter, nproc = nproc, epsa = epsa, epsb = epsb,
                       epsd = epsd, print.info = print.info, predict_ui = predict_ui)

@@ -2,7 +2,6 @@
 #'
 #' @param K number of the markers
 #' @param nD number of the latent processes
-#' @param nL number of exogeneous latent processes
 #' @param vec_ncol_x0n vector of number of columns of model.matrix for baseline's submodel
 #' @param n_col_x number of overall columns of model.matrix for change's submodel
 #' @param nb_RE number of random effects
@@ -34,7 +33,7 @@
 #' @importFrom survival coxph survreg
 #' 
 #' 
-Parametre <- function(K, nD,nL=NULL, vec_ncol_x0n, n_col_x, nb_RE, stochErr=FALSE, indexparaFixeUser =NULL,
+Parametre <- function(K, nD, vec_ncol_x0n, n_col_x, nb_RE, stochErr=FALSE, indexparaFixeUser =NULL,
                       paraFixeUser=NULL, L = 1, paras.ini, ncolMod.MatrixY, link, npara_k, 
                       Survdata = NULL, basehaz = NULL, knots_surv = NULL, assoc = NULL, truncation = F,
                       data, outcomes, df, nE = 0, np_surv = 0, fixed.survival.models = NULL, 
@@ -221,13 +220,6 @@ Parametre <- function(K, nD,nL=NULL, vec_ncol_x0n, n_col_x, nb_RE, stochErr=FALS
     cpt1 <- cpt1 + ncolMod.MatrixY
     p <- p + ncolMod.MatrixY
     
-    #Weigths for formative structural model
-    para_weights <- NULL
-    if(!is.null(nL)){
-      para_weights <- paras.ini[(p+1):(p+nL)]
-      p <- p+nL
-    }
-    
     
     #Survival
     para_surv <- NULL
@@ -259,7 +251,7 @@ Parametre <- function(K, nD,nL=NULL, vec_ncol_x0n, n_col_x, nb_RE, stochErr=FALS
   }
   
   #final vector of initial parameters
-  paras <- c(alpha_mu0, alpha_mu, alpha_D, vec_alpha_ij,  paraB, paraSig, ParaTransformY,para_weights)
+  paras <- c(alpha_mu0, alpha_mu, alpha_D, vec_alpha_ij,  paraB, paraSig, ParaTransformY)
   t1 <- 0
   t2 <- 0
   

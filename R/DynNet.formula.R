@@ -305,9 +305,9 @@ DynNet <- function(structural.model, measurement.model, parameters,
   #  option$type_int <- "montecarlo"
   #}
   
-  if(is.null(option$parallel)){
-     option$parallel <- FALSE
-   }
+  # if(is.null(option$parallel)){
+  #   option$parallel <- FALSE
+  # }
   if(is.null(option$maxiter)){
     option$maxiter <- 100
   }
@@ -315,11 +315,6 @@ DynNet <- function(structural.model, measurement.model, parameters,
     option$univarmaxiter <- 25
   }
   if(is.null(option$nproc)){
-    option$nproc <- 1
-  }
-  
-  if(option$nproc>1 & option$parallel==F){
-    message("nproc argument is ignored because parallel=F")
     option$nproc <- 1
   }
 
@@ -398,14 +393,10 @@ DynNet <- function(structural.model, measurement.model, parameters,
   ### outcomes and latent processes ####
   outcome <- as.character(attr(terms(fixed_DeltaX),"variables"))[2]
   outcomes_by_LP<-strsplit(outcome,"[|]")[[1]]
-  if(any(grepl("()",outcomes_by_LP))){
-    formative <- TRUE
-  }
   nD <- length(outcomes_by_LP) # nD: number of latent process
   
   outcomes <- NULL
   mapping.to.LP <- NULL
-  mapping.to.LP2 <- NULL
   for(n in 1:nD){
     outcomes_n <- strsplit(outcomes_by_LP[n],"[+]")[[1]]
     outcomes_n <-as.character(sapply(outcomes_n,FUN = function(x)gsub("[[:space:]]","",x),simplify = FALSE))
@@ -414,26 +405,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
     outcomes <- c(outcomes, outcomes_n)
     mapping.to.LP <- c(mapping.to.LP, rep(n,length(outcomes_n)))
   }
-  
-  if(formative){
-    outcomes <- as.character(sapply(outcomes,FUN = function(x)gsub("[()+]","",x),simplify = FALSE))
-    for (n in 1:nD){
-      outcomes_n <-  regmatches(outcomes_by_LP[n], gregexpr("\\([^()]*\\)|Y\\d+", outcomes_by_LP[n]))[[1]]
-      outcomes_n <-as.character(sapply(outcomes_n,FUN = function(x)gsub("[()]","",x),simplify = FALSE))
-      outcomes_n <-as.character(sapply(outcomes_n,FUN = function(x)gsub("[[:space:]]","",x),simplify = FALSE))
-      outcomes_n <- unique(outcomes_n)
-      for (l in 1:length(outcomes_n)){
-        outcomes_n2 <- regmatches(outcomes_n[l], gregexpr("Y\\d+", outcomes_n[l]))[[1]]
-        if(is.null(outcomes_n2)) stop("at least one marker must be specified for each latent exogeneous process" )
-        add <- ifelse(n==1,0,max(mapping.to.LP2))
-        mapping.to.LP2 <- c(mapping.to.LP2, rep(l+add,length(outcomes_n2)))
-        }
-      
-    }
-  }
-  if(length(unique(outcomes))!=length(outcomes)) stop("outcomes cannot be mapped to multiple latent processes")
   if(!all(outcomes%in% colnames)) stop("outcomes must be in the data")
-  nL <- ifelse(formative==T,max(mapping.to.LP2),NULL)
   K <- length(outcomes)
   all.Y<-seq(1,K)
   
@@ -442,16 +414,9 @@ DynNet <- function(structural.model, measurement.model, parameters,
   
   if(nD !=length(fixed_DeltaX.models)) stop("The number of models does not correspond to the number of latent processes")
   
-  if(formative){
-    if(nL > K){
-      stop("There are too many latent processes compared to the indicated number of markers")
-    }
-  }else{
-    if(nD > K){
-      stop("There are too many latent processes compared to the indicated number of markers")
-    }
+  if(nD > K){
+    stop("There are too many latent processes compared to the indicated number of markers")
   }
-  
   
   ### pre-traitement of fixed effect on initial levels of processes
   if(is.null(fixed_X0)){
@@ -639,7 +604,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   #### call of DynNet.default function to compute estimation and predictions
   est <- DynNet.default(fixed_X0.models = fixed_X0.models, fixed_DeltaX.models = fixed_DeltaX.models, randoms_X0.models = randoms_X0.models, 
                         randoms_DeltaX.models = randoms_DeltaX.models, mod_trans.model = mod_trans.model, DeltaT = DeltaT , outcomes = outcomes,
-                        nD = nD, mapping.to.LP = mapping.to.LP,nL=nL,mapping.to.LP2=mapping.to.LP2, link = link, knots = knots, subject = subject, data = data, Time = Time, 
+                        nD = nD, mapping.to.LP = mapping.to.LP, link = link, knots = knots, subject = subject, data = data, Time = Time, 
                         predict_ui = predict_ui, Survdata = Survdata, basehaz = basehaz, knots_surv = knots_surv, assoc = assoc, truncation = truncation, 
                         fixed.survival.models = fixed.survival.models, interactionY.survival.models = interactionY.survival.models,
                         makepred = option$makepred, MCnr_pred = option$MCnr_pred, MCnr = option$MCnr, MCnr2 = option$MCnr2, type_int = option$type_int, sequence = sequence, ind_seq_i = ind_seq_i, nmes = nmes, cholesky = cholesky,
