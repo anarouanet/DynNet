@@ -102,7 +102,7 @@
 #' @param StatusEvent name of the variable of event status
 #' @param basehaz type of baseline hazard function
 #' @param seed seed for random generator
-#' @param TimeDiscretization a boolean indicating if the initial time has to be discretized (FALSE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.
+#' @param TimeDiscretization a boolean indicating if the initial time has to be discretized (TRUE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.
 #' @param predict_ui boolean indicating if bayesian estimates of random effects should be computed (FALSE by default)
 #' @param  \dots other optional arguments
 #' @details The vector of initial values paras.ini includes: the regression parameters on the initial level;

@@ -89,6 +89,8 @@ DynNet(
 
 \item{\code{MCnr}}{ number Quasi-Monte Carlo replicates for the integration over random effects}
 
+%\item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
+
 \item{\code{type_int}}{ type of Monte Carlo integration method to use. Options are \describe{
 
   \item{\code{'montecarlo'}}{Vanilla Monte Carlo sampling.}
@@ -120,7 +122,7 @@ DynNet(
 
 \item{seed}{seed for random generator}
 
-\item{TimeDiscretization}{a boolean indicating if the initial time has to be discretized (FALSE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.}
+\item{TimeDiscretization}{a boolean indicating if the initial time has to be discretized (TRUE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.}
 
 \item{cholesky}{logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE, by default) or the correlation (FALSE)}
 

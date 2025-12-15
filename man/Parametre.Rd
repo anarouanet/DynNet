@@ -7,7 +7,6 @@
 Parametre(
   K,
   nD,
-  nL = NULL,
   vec_ncol_x0n,
   n_col_x,
   nb_RE,
@@ -38,8 +37,6 @@ Parametre(
 \item{K}{number of the markers}
 
 \item{nD}{number of the latent processes}
-
-\item{nL}{number of exogeneous latent processes}
 
 \item{vec_ncol_x0n}{vector of number of columns of model.matrix for baseline's submodel}
 
