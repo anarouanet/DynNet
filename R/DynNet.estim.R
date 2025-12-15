@@ -32,6 +32,8 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
   # package loading
   
   debug=0
+  
+  cluster_type <- ifelse(.Platform$OS.type == "unix", "FORK", "PSOCK")
 
   if(debug==1 || maxiter == -1){
     
@@ -104,7 +106,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                                          modA_mat = data$modA_mat, data_surv = as.matrix(data_surv), data_surv_intY = as.matrix(data$intYsurv), nYsurv = data$nYsurv, basehaz = ifelse(paras$basehaz=="Weibull", 0, 1), knots_surv = paras$knots_surv, 
                                          np_surv = paras$np_surv, survival = (data$nE>0), assoc =  paras$assoc, truncation = paras$truncation, 
                                          nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2), 
-                                         clustertype="FORK", ii=length(data$m_i)+10)
+                                         clustertype=cluster_type, ii=length(data$m_i)+10)
                   ,silent = FALSE)
       
       time=proc.time()-ptm
@@ -162,7 +164,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
     I2 <- rep(0,length(paras$paraOpt))
     
     if(nproc>1){
-      clustpar <- parallel::makeCluster(nproc, type="FORK")#, outfile="")
+      clustpar <- parallel::makeCluster(nproc, type=cluster_type)#, outfile="")
       doParallel::registerDoParallel(clustpar)    
       
       ll <- foreach(ii=1:N,
@@ -271,7 +273,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                                          nYsurv = data$nYsurv, basehaz = ifelse(paras$basehaz=="Weibull", 0, 1), knots_surv = paras$knots_surv, 
                                          np_surv = paras$np_surv, survival = (data$nE>0), assoc =  paras$assoc, truncation = paras$truncation, 
                                          nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2), 
-                                         clustertype="FORK", ii=i)
+                                         clustertype = cluster_type, ii=i)
                   ,silent = T)
       if(inherits(temp ,'try-error')){
         ui_hat[i,] <- rep(NA,dim(ui_hat)[2])
