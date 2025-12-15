@@ -89,7 +89,7 @@ DynNet(
 
 \item{\code{MCnr}}{ number Quasi-Monte Carlo replicates for the integration over random effects}
 
-%\item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
+\item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
 
 \item{\code{type_int}}{ type of Monte Carlo integration method to use. Options are \describe{
 
