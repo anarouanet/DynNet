@@ -79,8 +79,6 @@
 #'
 #' \item{\code{MCnr}}{ number Quasi-Monte Carlo replicates for the integration over random effects}
 #' 
-#' \item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
-#' 
 #' \item{\code{type_int}}{ type of Monte Carlo integration method to use. Options are \describe{
 #'
 #'   \item{\code{'montecarlo'}}{Vanilla Monte Carlo sampling.}
@@ -98,13 +96,13 @@
 #' @param Time indicates the name of the covariate representing the time 
 #' @param subject indicates the name of the covariate representing the grouping structure
 #' @param data indicates the data frame containing all the variables for estimating the model.
-#' @param cholesky logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE, by default) or the correlation (FALSE)
+#' @param cholesky logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE by default) or the correlation (FALSE)
 #' @param Tentry name of the variable of entry time
 #' @param Event name of the variable of event time
 #' @param StatusEvent name of the variable of event status
 #' @param basehaz type of baseline hazard function
 #' @param seed seed for random generator
-#' @param TimeDiscretization a boolean indicating if the initial time has to be discretized (TRUE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.
+#' @param TimeDiscretization a boolean indicating if the initial time has to be discretized (FALSE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.
 #' @param predict_ui boolean indicating if bayesian estimates of random effects should be computed (FALSE by default)
 #' @param  \dots other optional arguments
 #' @details The vector of initial values paras.ini includes: the regression parameters on the initial level;
@@ -146,7 +144,6 @@
 #'                                 Fixed.para.values = paraFixeUser),
 #'               option = list(nproc = 1, print.info = TRUE,  MCnr = 10, 
 #'                             univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
-#'               TimeDiscretization=FALSE,
 #'               Time = "time",
 #'               subject = "id",
 #'               data = data
@@ -176,7 +173,6 @@
 #'                                Fixed.para.values = paraFixeUser),
 #'              option = list(nproc = 2, print.info = TRUE, MCnr = 10, 
 #'                            univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
-#'              TimeDiscretization=FALSE,
 #'              Time = "time",
 #'              subject = "id",
 #'              data = data
@@ -204,7 +200,6 @@
 #'                              Fixed.para.values = paraFixeUser),
 #'            option = list(nproc = 1, print.info = FALSE,  MCnr = 10, 
 #'                          univarmaxiter = 7, epsa = 1e-5, epsb = 1e-5, epsd = 1e-5),
-#'            TimeDiscretization=FALSE,
 #'            Time = "time",
 #'            subject = "id",
 #'            data = data
@@ -228,7 +223,6 @@
 #'                            Fixed.para.values = paraFixeUser),
 #'          option = list(nproc = 2, print.info = TRUE,  MCnr = 10, 
 #'                        univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
-#'          TimeDiscretization=FALSE,
 #'          Time = "time",
 #'          subject = "id",
 #'          data = data
@@ -281,10 +275,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   if(is.null(option$makepred)){
     option$makepred <- F
   }
-  if(is.null(option$MCnr_pred)){
-    option$MCnr_pred <- 30
-  }
-  
+
 
   survival= FALSE
   if(!is.null(structural.model$fixed.survival)){
@@ -300,9 +291,16 @@ DynNet <- function(structural.model, measurement.model, parameters,
     }
   }
   
-  if(is.null(option$MCnr2)){
+  if(option$MCnr>0 & is.null(option$MCnr_pred)){
+    option$MCnr_pred <- 30
+  }else{
+    option$MCnr_pred <- 0
+  }
+  
+  if(is.null(option$MCnr2)){#number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982). Not used here as this doesn't work
       option$MCnr2 <- 0
   }
+
   #if(is.null(option$type_int)){
   #  option$type_int <- "montecarlo"
   #}

@@ -89,8 +89,6 @@ DynNet(
 
 \item{\code{MCnr}}{ number Quasi-Monte Carlo replicates for the integration over random effects}
 
-\item{\code{MCnr2}}{ number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982)}
-
 \item{\code{type_int}}{ type of Monte Carlo integration method to use. Options are \describe{
 
   \item{\code{'montecarlo'}}{Vanilla Monte Carlo sampling.}
@@ -122,9 +120,9 @@ DynNet(
 
 \item{seed}{seed for random generator}
 
-\item{TimeDiscretization}{a boolean indicating if the initial time has to be discretized (TRUE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.}
+\item{TimeDiscretization}{a boolean indicating if the initial time has to be discretized (FALSE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.}
 
-\item{cholesky}{logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE, by default) or the correlation (FALSE)}
+\item{cholesky}{logical indicating if the variance covariance matrix is parameterized using the cholesky (TRUE by default) or the correlation (FALSE)}
 
 \item{predict_ui}{boolean indicating if bayesian estimates of random effects should be computed (FALSE by default)}
 
@@ -185,7 +183,6 @@ mod1 <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
                                 Fixed.para.values = paraFixeUser),
               option = list(nproc = 1, print.info = TRUE,  MCnr = 10, 
                             univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
-              TimeDiscretization=FALSE,
               Time = "time",
               subject = "id",
               data = data
@@ -215,7 +212,6 @@ mod2 <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
                                Fixed.para.values = paraFixeUser),
              option = list(nproc = 2, print.info = TRUE, MCnr = 10, 
                            univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
-             TimeDiscretization=FALSE,
              Time = "time",
              subject = "id",
              data = data
@@ -242,7 +238,6 @@ mod <-  DynNet(structural.model = list(fixed.LP0 = ~ 1 + C1 + C2|1 + C1 + C2,
                              Fixed.para.values = paraFixeUser),
            option = list(nproc = 1, print.info = FALSE,  MCnr = 10, 
                          univarmaxiter = 7, epsa = 1e-5, epsb = 1e-5, epsd = 1e-5),
-           TimeDiscretization=FALSE,
            Time = "time",
            subject = "id",
            data = data
@@ -266,7 +261,6 @@ res <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
                            Fixed.para.values = paraFixeUser),
          option = list(nproc = 2, print.info = TRUE,  MCnr = 10, 
                        univarmaxiter = 7, epsa = 1e-5, epsb = 1e-4, epsd = 1e-2),
-         TimeDiscretization=FALSE,
          Time = "time",
          subject = "id",
          data = data

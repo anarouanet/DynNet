@@ -175,8 +175,8 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
     expotrick=0;
   
   int check=2;
-  if(max(if_link) < 2 && MCnr>0)
-    check=1;
+  //if(max(if_link) < 2 && MCnr>0)
+    //check=1;
       // check = 1 both QMC and closed likelihood for comparison of individual likelihood (type_int, MCnr must be defined!) 
       // check =  2 close likelihood if links = linear/splines, QMC if links = thresholds or if survival = T
       // check =  3 MC integration (even if links = linear/splines and survival = F)
@@ -363,9 +363,8 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
     
     // ##### computering of the likelihood ########################## all linear
     loglik_i = -0.5*(sum(k_i)*log(2*M_PI) + log(abs_det_matVY_i) + as_scalar(Ytildi_nu_i.t()*inv_sympd(matVY_i)*Ytildi_nu_i)) + log_Jac_Phi;
-
    
-    
+   
     //loglik_i0 = -0.5*(sum(k_i)*log(2*M_PI) + log(abs_det_matVY_i) + as_scalar(Ytildi_nu_i.t()*inv_sympd(matVY_i)*Ytildi_nu_i)) ;//+ log_Jac_Phi;
 
     //loglik_i2 = -0.5*(sum(k_i)*log(2*M_PI) + log(det(sigMSM)) + as_scalar(Ytildi_nu_i.t()*inv_sympd(sigMSM)*Ytildi_nu_i)) + log_Jac_Phi;
@@ -811,6 +810,7 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
        }
     }
   }
+
   return(lvrais);
 }
 
@@ -2544,8 +2544,6 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
                            sequence, type_int, ind_seq_i, MCnr, n, nE, add_diag_varcov, q);   
       
       loglik += out1;
-      //Rcout << " n" <<n<< " logliki "<< out1<<endl;
-      
     }
 
      
