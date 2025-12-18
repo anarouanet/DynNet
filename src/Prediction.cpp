@@ -761,7 +761,7 @@ Predictions for overall individuals
 */
 //===========================================================================================
 //' Function that computes the predictions (marginal and subject-specific) for individuals
-//'  
+//' @rdname pred
 //' @param K an integer indicating the number of markers
 //' @param nD an integer indicating the number of latent processes
 //' @param mapping indicates which outcome measured which latent process, it is a mapping table between
@@ -951,8 +951,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
  Predictions for overall individuals
  */
 //===========================================================================================
-//' Function that computes the predictions (marginal and subject-specific) for individuals
- //'  
+ //' @rdname pred
  //' @param K an integer indicating the number of markers
  //' @param nD an integer indicating the number of latent processes
  //' @param mapping indicates which outcome measured which latent process, it is a mapping table between
@@ -1344,8 +1343,7 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
  Predictions for overall individuals
  */
 //===========================================================================================
-//' Function that computes the predictions (marginal and subject-specific) for individuals
- //'  
+ //' @rdname pred
  //' @param K an integer indicating the number of markers
  //' @param nD an integer indicating the number of latent processes
  //' @param mapping indicates which outcome measured which latent process, it is a mapping table between

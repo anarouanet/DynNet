@@ -203,13 +203,13 @@ summary(mod1)
  ### example 2
  Delta <- 0.5
  structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
-                                                   fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
-                                                   random.DeltaLP = ~ 1|1,
-                                                   trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
-                                                                           intercept = F, degree = 2),
-                                                   delta.time = Delta),
-measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
-                                                   knots = list(NULL, NULL, NULL))),
+                         fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
+                         random.DeltaLP = ~ 1|1,
+                         trans.matrix = ~ 1 + bs(x = time, knots =c(2), intercept = F, 
+                                                 degree = 2),
+                         delta.time = Delta)
+  measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
+                                               knots = list(NULL, NULL, NULL)))
  Parameters <- enter_param(structural.model = structural.model,
                            measurement.model = measurement.model,
                            Time = "time",
@@ -229,11 +229,11 @@ measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
                                                1.891,  0.846, 1.345))
                                                
 mod2 <- DynNet(structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
-                                     fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
-                                     random.DeltaLP = ~ 1|1,
-                                     trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
-                                                             intercept = F, degree = 2),
-                                     delta.time = Delta),
+                                       fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
+                                       random.DeltaLP = ~ 1|1,
+                                       trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
+                                                               intercept = F, degree = 2),
+                                       delta.time = Delta),
              measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
                                                             knots = list(NULL, NULL, NULL))),
              

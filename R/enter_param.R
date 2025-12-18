@@ -85,7 +85,6 @@
 #' @export
 #' @importFrom splines bs
 #' @examples
-#'         
 #' ### example 1
 #' Delta <- 1
 #' structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
@@ -125,13 +124,13 @@
 #'  ### example 2
 #'  Delta <- 0.5
 #'  structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
-#'                                                    fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
-#'                                                    random.DeltaLP = ~ 1|1,
-#'                                                    trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
-#'                                                                            intercept = F, degree = 2),
-#'                                                    delta.time = Delta),
+#'                          fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
+#'                          random.DeltaLP = ~ 1|1,
+#'                          trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
+#'                                                  intercept = F, degree = 2),
+#'                          delta.time = Delta)
 #' measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
-#'                                                    knots = list(NULL, NULL, NULL))),
+#'                                                    knots = list(NULL, NULL, NULL)))
 #'  Parameters <- enter_param(structural.model = structural.model,
 #'                            measurement.model = measurement.model,
 #'                            Time = "time",
@@ -140,10 +139,11 @@
 #'                            p.initlev = c(0.000,0.065, 0.000, 0.168), 
 #'                            fix.p.initlev = c(1, 0, 1, 0), 
 #'                            p.slope = c(-0.054, 0.000, -0.119, -0.009), 
-#'                            varcovRE =  c(1.000, 0.000, 0.473, 0.000, 1.000, 0.000, 0.057, -0.182, 0.000, 0.174), 
+#'                            varcovRE =  c(1.000, 0.000, 0.473, 0.000, 1.000, 0.000, 0.057, -0.182,
+#'                                          0.000, 0.174), 
 #'                            fix.varcovRE = c(1, 1, 0, 1, 1, 1, 0, 0, 1, 0),
-#'                            transitionmatrix = c(-0.523, 0.000,
-#'                                                 0.000, 0.000, 0.073, 0.083, 0.119,  0.106, 0.015,  0.157,  0.054, 0.087,
+#'                            transitionmatrix = c(-0.523, 0.000, 0.000, 0.000, 0.073, 0.083, 
+#'                                                 0.119, 0.106, 0.015, 0.157, 0.054, 0.087, 
 #'                                                 -0.079, 0.000, 0.000, 0.000), 
 #'                            fix.transitionmatrix = c(0,rep(1,3),rep(0,9),rep(1,3)),
 #'                            var.errors = c(8.876, 0.287, 0.546), 

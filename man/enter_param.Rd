@@ -4,17 +4,48 @@
 \alias{enter_param}
 \title{function that returns the parameters object required in the DynNet function.}
 \usage{
-enter_param(structural.model, 
-                   measurement.model, 
-                   Time, 
-                   subject, 
-                   data,
-                   p.initlev, 
-                   p.slope, 
-                   varcovRE, 
-                   transitionmatrix, 
-                   var.errors, 
-                   transformationY)
+enter_param(
+  structural.model,
+  measurement.model,
+  Time,
+  subject,
+  data,
+  Tentry = NULL,
+  Event = NULL,
+  StatusEvent = NULL,
+  basehaz = NULL,
+  assocT = NULL,
+  p.initlev,
+  fix.p.initlev = rep(0, length(p.initlev)),
+  p.slope,
+  fix.p.slope = rep(0, length(p.slope)),
+  varcovRE,
+  fix.varcovRE = rep(0, length(varcovRE)),
+  transitionmatrix,
+  fix.transitionmatrix = rep(0, length(transitionmatrix)),
+  parab = NULL,
+  fix.parab = rep(0, length(parab)),
+  var.errors,
+  fix.var.errors = rep(0, length(var.errors)),
+  transformationY,
+  fix.transformationY = rep(0, length(transformationY)),
+  baseline1 = NULL,
+  fix.baseline1 = rep(0, length(baseline1)),
+  p.X1 = NULL,
+  fix.p.X1 = rep(0, length(p.X1)),
+  p.asso1 = NULL,
+  fix.p.asso1 = rep(0, length(p.asso1)),
+  p.asso.int1 = NULL,
+  fix.p.asso.int1 = rep(0, length(p.asso.int1)),
+  baseline2 = NULL,
+  fix.baseline2 = rep(0, length(baseline2)),
+  p.X2 = NULL,
+  fix.p.X2 = rep(0, length(p.X2)),
+  p.asso2 = NULL,
+  fix.p.asso2 = rep(0, length(p.asso2)),
+  p.asso.int2 = NULL,
+  fix.p.asso.int2 = rep(0, length(p.asso.int2))
+)
 }
 \arguments{
 \item{structural.model}{a list of 7 arguments used to specify the structural model: \describe{
@@ -130,7 +161,6 @@ and their corresponding fixed values (Fixed.para.values), which are required to
 run the DynNet function.
 }
 \examples{
-        
 ### example 1
 Delta <- 1
 structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
@@ -170,13 +200,13 @@ summary(mod1)
  ### example 2
  Delta <- 0.5
  structural.model = list(fixed.LP0 = ~ 1 + C2 | 1 + C2,
-                                                   fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
-                                                   random.DeltaLP = ~ 1|1,
-                                                   trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
-                                                                           intercept = F, degree = 2),
-                                                   delta.time = Delta),
+                         fixed.DeltaLP = L1 + L2| L3  ~ 1 + time| 1 + time,
+                         random.DeltaLP = ~ 1|1,
+                         trans.matrix = ~ 1 + bs(x = time, knots =c(2), 
+                                                 intercept = F, degree = 2),
+                         delta.time = Delta)
 measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
-                                                   knots = list(NULL, NULL, NULL))),
+                                                   knots = list(NULL, NULL, NULL)))
  Parameters <- enter_param(structural.model = structural.model,
                            measurement.model = measurement.model,
                            Time = "time",
@@ -185,10 +215,11 @@ measurement.model = list(link.functions = list(links = c(NULL,NULL, NULL),
                            p.initlev = c(0.000,0.065, 0.000, 0.168), 
                            fix.p.initlev = c(1, 0, 1, 0), 
                            p.slope = c(-0.054, 0.000, -0.119, -0.009), 
-                           varcovRE =  c(1.000, 0.000, 0.473, 0.000, 1.000, 0.000, 0.057, -0.182, 0.000, 0.174), 
+                           varcovRE =  c(1.000, 0.000, 0.473, 0.000, 1.000, 0.000, 0.057, -0.182,
+                                         0.000, 0.174), 
                            fix.varcovRE = c(1, 1, 0, 1, 1, 1, 0, 0, 1, 0),
-                           transitionmatrix = c(-0.523, 0.000,
-                                                0.000, 0.000, 0.073, 0.083, 0.119,  0.106, 0.015,  0.157,  0.054, 0.087,
+                           transitionmatrix = c(-0.523, 0.000, 0.000, 0.000, 0.073, 0.083, 
+                                                0.119, 0.106, 0.015, 0.157, 0.054, 0.087, 
                                                 -0.079, 0.000, 0.000, 0.000), 
                            fix.transitionmatrix = c(0,rep(1,3),rep(0,9),rep(1,3)),
                            var.errors = c(8.876, 0.287, 0.546), 

@@ -499,6 +499,95 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fct_risq_base
+double fct_risq_base(double t, int status, arma::vec& param_basehaz, int basehaz, arma::vec& knots_surv, int nE, arma::vec& gammaX, bool surv, int trans);
+RcppExport SEXP _DynNet_fct_risq_base(SEXP tSEXP, SEXP statusSEXP, SEXP param_basehazSEXP, SEXP basehazSEXP, SEXP knots_survSEXP, SEXP nESEXP, SEXP gammaXSEXP, SEXP survSEXP, SEXP transSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type t(tSEXP);
+    Rcpp::traits::input_parameter< int >::type status(statusSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type param_basehaz(param_basehazSEXP);
+    Rcpp::traits::input_parameter< int >::type basehaz(basehazSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type knots_surv(knots_survSEXP);
+    Rcpp::traits::input_parameter< int >::type nE(nESEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type gammaX(gammaXSEXP);
+    Rcpp::traits::input_parameter< bool >::type surv(survSEXP);
+    Rcpp::traits::input_parameter< int >::type trans(transSEXP);
+    rcpp_result_gen = Rcpp::wrap(fct_risq_base(t, status, param_basehaz, basehaz, knots_surv, nE, gammaX, surv, trans));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fct_pred_curlev_slope
+arma::vec fct_pred_curlev_slope(arma::vec& ptGK_delta, arma::vec& ptGK, arma::colvec& xti1, arma::colvec& xti2, arma::mat& xti1_intY, arma::mat& xti2_intY, arma::vec& ui_r, int delta_i, arma::colvec& param_surv, arma::colvec& param_surv_intY, int assoc, int nD, double DeltaT, arma::mat& x0i, arma::colvec& alpha_mu0, arma::mat& xi, arma::colvec& alpha_mu, arma::mat& G_mat_A_0_to_tau_i, arma::mat& zi, arma::vec& param_basehaz, int basehaz, arma::vec& knots_surv, arma::vec& gamma_X, int nE, bool survfunc, int trans);
+RcppExport SEXP _DynNet_fct_pred_curlev_slope(SEXP ptGK_deltaSEXP, SEXP ptGKSEXP, SEXP xti1SEXP, SEXP xti2SEXP, SEXP xti1_intYSEXP, SEXP xti2_intYSEXP, SEXP ui_rSEXP, SEXP delta_iSEXP, SEXP param_survSEXP, SEXP param_surv_intYSEXP, SEXP assocSEXP, SEXP nDSEXP, SEXP DeltaTSEXP, SEXP x0iSEXP, SEXP alpha_mu0SEXP, SEXP xiSEXP, SEXP alpha_muSEXP, SEXP G_mat_A_0_to_tau_iSEXP, SEXP ziSEXP, SEXP param_basehazSEXP, SEXP basehazSEXP, SEXP knots_survSEXP, SEXP gamma_XSEXP, SEXP nESEXP, SEXP survfuncSEXP, SEXP transSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type ptGK_delta(ptGK_deltaSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type ptGK(ptGKSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type xti1(xti1SEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type xti2(xti2SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xti1_intY(xti1_intYSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xti2_intY(xti2_intYSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type ui_r(ui_rSEXP);
+    Rcpp::traits::input_parameter< int >::type delta_i(delta_iSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type param_surv(param_survSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type param_surv_intY(param_surv_intYSEXP);
+    Rcpp::traits::input_parameter< int >::type assoc(assocSEXP);
+    Rcpp::traits::input_parameter< int >::type nD(nDSEXP);
+    Rcpp::traits::input_parameter< double >::type DeltaT(DeltaTSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type x0i(x0iSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type alpha_mu0(alpha_mu0SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xi(xiSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type alpha_mu(alpha_muSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type G_mat_A_0_to_tau_i(G_mat_A_0_to_tau_iSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type zi(ziSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type param_basehaz(param_basehazSEXP);
+    Rcpp::traits::input_parameter< int >::type basehaz(basehazSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type knots_surv(knots_survSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type gamma_X(gamma_XSEXP);
+    Rcpp::traits::input_parameter< int >::type nE(nESEXP);
+    Rcpp::traits::input_parameter< bool >::type survfunc(survfuncSEXP);
+    Rcpp::traits::input_parameter< int >::type trans(transSEXP);
+    rcpp_result_gen = Rcpp::wrap(fct_pred_curlev_slope(ptGK_delta, ptGK, xti1, xti2, xti1_intY, xti2_intY, ui_r, delta_i, param_surv, param_surv_intY, assoc, nD, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, param_basehaz, basehaz, knots_surv, gamma_X, nE, survfunc, trans));
+    return rcpp_result_gen;
+END_RCPP
+}
+// f_survival_ui
+arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i, int delta_i, arma::colvec& xti1, arma::colvec& xti2, arma::mat& xti1_intY, arma::mat& xti2_intY, arma::colvec& param_surv, arma::colvec& param_surv_intY, arma::vec& param_basehaz, int basehaz, arma::vec& knots_surv, int assoc, bool truncation, int nD, double DeltaT, arma::mat& x0i, arma::colvec& alpha_mu0, arma::mat& xi, arma::colvec& alpha_mu, arma::mat& G_mat_A_0_to_tau_i, arma::mat& zi, int nE);
+RcppExport SEXP _DynNet_f_survival_ui(SEXP ui_rSEXP, SEXP t_0iSEXP, SEXP t_iSEXP, SEXP delta_iSEXP, SEXP xti1SEXP, SEXP xti2SEXP, SEXP xti1_intYSEXP, SEXP xti2_intYSEXP, SEXP param_survSEXP, SEXP param_surv_intYSEXP, SEXP param_basehazSEXP, SEXP basehazSEXP, SEXP knots_survSEXP, SEXP assocSEXP, SEXP truncationSEXP, SEXP nDSEXP, SEXP DeltaTSEXP, SEXP x0iSEXP, SEXP alpha_mu0SEXP, SEXP xiSEXP, SEXP alpha_muSEXP, SEXP G_mat_A_0_to_tau_iSEXP, SEXP ziSEXP, SEXP nESEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type ui_r(ui_rSEXP);
+    Rcpp::traits::input_parameter< double >::type t_0i(t_0iSEXP);
+    Rcpp::traits::input_parameter< double >::type t_i(t_iSEXP);
+    Rcpp::traits::input_parameter< int >::type delta_i(delta_iSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type xti1(xti1SEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type xti2(xti2SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xti1_intY(xti1_intYSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xti2_intY(xti2_intYSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type param_surv(param_survSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type param_surv_intY(param_surv_intYSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type param_basehaz(param_basehazSEXP);
+    Rcpp::traits::input_parameter< int >::type basehaz(basehazSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type knots_surv(knots_survSEXP);
+    Rcpp::traits::input_parameter< int >::type assoc(assocSEXP);
+    Rcpp::traits::input_parameter< bool >::type truncation(truncationSEXP);
+    Rcpp::traits::input_parameter< int >::type nD(nDSEXP);
+    Rcpp::traits::input_parameter< double >::type DeltaT(DeltaTSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type x0i(x0iSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type alpha_mu0(alpha_mu0SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type xi(xiSEXP);
+    Rcpp::traits::input_parameter< arma::colvec& >::type alpha_mu(alpha_muSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type G_mat_A_0_to_tau_i(G_mat_A_0_to_tau_iSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type zi(ziSEXP);
+    Rcpp::traits::input_parameter< int >::type nE(nESEXP);
+    rcpp_result_gen = Rcpp::wrap(f_survival_ui(ui_r, t_0i, t_i, delta_i, xti1, xti2, xti1_intY, xti2_intY, param_surv, param_surv_intY, param_basehaz, basehaz, knots_surv, assoc, truncation, nD, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, nE));
+    return rcpp_result_gen;
+END_RCPP
+}
 // VecToMat
 arma::mat VecToMat(arma::vec& y, int K, int m_i);
 RcppExport SEXP _DynNet_VecToMat(SEXP ySEXP, SEXP KSEXP, SEXP m_iSEXP) {
@@ -536,6 +625,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_DynNet_YiNui", (DL_FUNC) &_DynNet_YiNui, 11},
     {"_DynNet_f_marker", (DL_FUNC) &_DynNet_f_marker, 21},
     {"_DynNet_matNui_ui", (DL_FUNC) &_DynNet_matNui_ui, 11},
+    {"_DynNet_fct_risq_base", (DL_FUNC) &_DynNet_fct_risq_base, 9},
+    {"_DynNet_fct_pred_curlev_slope", (DL_FUNC) &_DynNet_fct_pred_curlev_slope, 26},
+    {"_DynNet_f_survival_ui", (DL_FUNC) &_DynNet_f_survival_ui, 24},
     {"_DynNet_VecToMat", (DL_FUNC) &_DynNet_VecToMat, 3},
     {NULL, NULL, 0}
 };

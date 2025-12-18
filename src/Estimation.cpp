@@ -2153,7 +2153,6 @@ bool compFun1(int i) {
  */
 //===========================================================================================
 //' Function that computes the log-likelihood of the observed data
-//'  
 //' @param K an integer indicating the number of markers
 //' @param nD an integer indicating the number of latent processes
 //' @param mapping indicates which outcome measured which latent process, it is a mapping table between
@@ -2581,8 +2580,7 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
  Function f_Loglik: log-likelihood of the observed data for a given ui value
  */
 //===========================================================================================
-//' Function that computes the log-likelihood of the observed data for a given ui value
- //'  
+ //' Function that computes the log-likelihood of the observed data for a given ui value
  //' @param K an integer indicating the number of markers
  //' @param nD an integer indicating the number of latent processes
  //' @param mapping indicates which outcome measured which latent process, it is a mapping table between

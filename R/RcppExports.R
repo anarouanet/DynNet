@@ -4,11 +4,7 @@
 #' @import RcppArmadillo
 NULL
 
-#' Function that computes the log-likelihood of the observed data for a given ui value
-NULL
-
 #' Function that computes the log-likelihood of the observed data
-#'  
 #' @param K an integer indicating the number of markers
 #' @param nD an integer indicating the number of latent processes
 #' @param mapping indicates which outcome measured which latent process, it is a mapping table between
@@ -67,13 +63,7 @@ Loglik2 <- function(K, nD, mapping, paraOpt, paraFixe, posfix, paras_k, sequence
 }
 
 #' Function that computes the predictions (marginal and subject-specific) for individuals
-NULL
-
-#' Function that computes the predictions (marginal and subject-specific) for individuals
-NULL
-
-#' Function that computes the predictions (marginal and subject-specific) for individuals
-#'  
+#' @rdname pred
 #' @param K an integer indicating the number of markers
 #' @param nD an integer indicating the number of latent processes
 #' @param mapping indicates which outcome measured which latent process, it is a mapping table between
@@ -117,69 +107,6 @@ pred_bis <- function(K, nD, mapping, paras, m_is, Mod_MatrixY, df, x, z, q, chol
 pred0 <- function(K, nD, mapping, paras, m_is, Mod_MatrixY, df, x, z, q, nb_paraD, x0, z0, q0, if_link, tau, tau_is, modA_mat, DeltaT, MCnr, minY, maxY, knots, degree, epsPred) {
     .Call(`_DynNet_pred0`, K, nD, mapping, paras, m_is, Mod_MatrixY, df, x, z, q, nb_paraD, x0, z0, q0, if_link, tau, tau_is, modA_mat, DeltaT, MCnr, minY, maxY, knots, degree, epsPred)
 }
-
-#'  Function that constructs the matrix matYtild_ui (Lambda_i|ui), the expectation of the processes at time t_j given ui
-NULL
-
-#' Function that computes the difference (mat_Yi - mat_Nu_i), delates missing values (NAs) and 
-#' returns a vector. mat_Yi is the outcomes and mat_Nu_i is the expectation
-#'  
-#' @param Lambdai a matrix of dimension nT x nD containing the sampled lambda_i
-#' @param nD an integer indicating the number of processes
-#' @param matrixP a matrix that matches markers to latent processes
-#' @param tau a vector of integers indicating times 
-#' @param tau_i a vector of integers indicating times for individual i
-#' @param DeltaT double that indicates the discretization step
-#' @param Ytildi vector of individual transformed outcomes
-#' @param YtildPrimi vector of individual transformed derivatives
-#' @param x0i model.matrix for baseline's submodel
-#' @param xi model.matrix for change's submodel
-#' @param paraSig variances of marker-specific measurement errors
-#' @param alpha_mu0 a vector of parameters associated to the model.matrix for the baseline's submodel
-#' @param alpha_mu a vector of parameters associated to the model.matrix for the change's submodel
-#' @param G_mat_A_0_to_tau_i matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition
-#' matric containing at time t
-#' @param paraEtha2 transformation parameters
-#' @param if_link: link function indicator, 0 if linear, 1 if splines, 2 if thresholds
-#' @param zitr: minY and maxY of observed ordinal Y
-#' @param ide indicator if the values between zitr(0) and zitr(1) are observed in Y 
-#' @param paras_k: number of parameters for link function for each marker k
-#' @param K2_lambda_t: vector indicating to which latent process corresponds each value of Lambdai
-#' @param K2_lambda: vector indicating to which latent process corresponds each marker
-#' 
-#' @return a double
-#' @export
-#' 
-NULL
-
-#' gammaX vector of linear predictors for 1 and 2 transitions (including association on random effects if assoc <=2)
-#' surv Computation of survival funtion (1) or risk function (0)
-#' trans index for computation of survival function on all transitions (-1), on first transition(0), or second transition (1) for nE=2
-#' when 
-NULL
-
-#' ptGK_delta vector of projections of GK nodes onto grid of delta
-#' ptGK vector of individual GK nodes
-#' alpha vector of association parameters
-#' delta_i event status 
-#' survfunc indicator if output is survival function or hazard risk
-#' trans index for computation of survival/risk function on all transitions (-1), on first transition(0), or second transition (1)
-NULL
-
-#' ui_r vector of individual random effects
-#' t_i individual time-to-event
-#' delta_i individual status of event
-#' xti1 vector of individual covariates for first event
-#' xti2 vector of individual covariates for competing event
-#' param_surv regression parameters
-#' param_basehaz parameters for baseline hazard function
-#' basehaz type of baseline hazard function
-#' knots_surv vector of knots if basehaz == Splines
-#' assoc function of the random effects that captures association 
-#' //'    (0: random intercept, 1: random slope, 2: random intercept and slope, 3: current value, 4: current slope, 5: current value and slope)
-#' truncation boolean, indicating if left truncation or not
-#' 
-NULL
 
 #' Function that vectorises a matrix by rows
 #' 
@@ -388,6 +315,35 @@ YiNui <- function(nD, matrixP, tau, tau_i, DeltaT, Yi, x0i, alpha_mu0, xi, alpha
     .Call(`_DynNet_YiNui`, nD, matrixP, tau, tau_i, DeltaT, Yi, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i)
 }
 
+#' Function that computes the difference (mat_Yi - mat_Nu_i), delates missing values (NAs) and 
+#' returns a vector. mat_Yi is the outcomes and mat_Nu_i is the expectation
+#'  
+#' @param Lambdai a matrix of dimension nT x nD containing the sampled lambda_i
+#' @param nD an integer indicating the number of processes
+#' @param matrixP a matrix that matches markers to latent processes
+#' @param tau a vector of integers indicating times 
+#' @param tau_i a vector of integers indicating times for individual i
+#' @param DeltaT double that indicates the discretization step
+#' @param Ytildi vector of individual transformed outcomes
+#' @param YtildPrimi vector of individual transformed derivatives
+#' @param x0i model.matrix for baseline's submodel
+#' @param xi model.matrix for change's submodel
+#' @param paraSig variances of marker-specific measurement errors
+#' @param alpha_mu0 a vector of parameters associated to the model.matrix for the baseline's submodel
+#' @param alpha_mu a vector of parameters associated to the model.matrix for the change's submodel
+#' @param G_mat_A_0_to_tau_i matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition
+#' matric containing at time t
+#' @param paraEtha2 transformation parameters
+#' @param if_link: link function indicator, 0 if linear, 1 if splines, 2 if thresholds
+#' @param zitr: minY and maxY of observed ordinal Y
+#' @param ide indicator if the values between zitr(0) and zitr(1) are observed in Y 
+#' @param paras_k: number of parameters for link function for each marker k
+#' @param K2_lambda_t: vector indicating to which latent process corresponds each value of Lambdai
+#' @param K2_lambda: vector indicating to which latent process corresponds each marker
+#' 
+#' @return a double
+#' @export
+#' 
 f_marker <- function(Lambdai, nD, matrixP, tau, tau_i, DeltaT, Ytildi, YtildPrimi, x0i, alpha_mu0, xi, paraSig, alpha_mu, G_mat_A_0_to_tau_i, paraEtha2, if_link, zitr, ide, paras_k, K2_lambda_t, K2_lambda) {
     .Call(`_DynNet_f_marker`, Lambdai, nD, matrixP, tau, tau_i, DeltaT, Ytildi, YtildPrimi, x0i, alpha_mu0, xi, paraSig, alpha_mu, G_mat_A_0_to_tau_i, paraEtha2, if_link, zitr, ide, paras_k, K2_lambda_t, K2_lambda)
 }
@@ -412,6 +368,43 @@ f_marker <- function(Lambdai, nD, matrixP, tau, tau_i, DeltaT, Ytildi, YtildPrim
 #' 
 matNui_ui <- function(nD, tau_i, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, randomeffects, zi, ordered) {
     .Call(`_DynNet_matNui_ui`, nD, tau_i, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, randomeffects, zi, ordered)
+}
+
+#' Computes the hazard risk or survival if surv == true
+#' @param gammaX vector of linear predictors for 1 and 2 transitions (including association on random effects if assoc <=2)
+#' @param surv Computation of survival funtion (1) or risk function (0)
+#' @param trans index for computation of survival function on all transitions (-1), on first transition(0), or second transition (1) for nE=2
+#' when 
+fct_risq_base <- function(t, status, param_basehaz, basehaz, knots_surv, nE, gammaX, surv, trans) {
+    .Call(`_DynNet_fct_risq_base`, t, status, param_basehaz, basehaz, knots_surv, nE, gammaX, surv, trans)
+}
+
+#' @title Computes the hazard risk or survival function for a vector or timepoints
+#' @param ptGK_delta vector of projections of GK nodes onto grid of delta
+#' @param ptGK vector of individual GK nodes
+#' @param alpha vector of association parameters
+#' @param delta_i event status 
+#' @param survfunc indicator if output is survival function or hazard risk
+#' @param trans index for computation of survival/risk function on all transitions (-1), on first transition(0), or second transition (1)
+fct_pred_curlev_slope <- function(ptGK_delta, ptGK, xti1, xti2, xti1_intY, xti2_intY, ui_r, delta_i, param_surv, param_surv_intY, assoc, nD, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, param_basehaz, basehaz, knots_surv, gamma_X, nE, survfunc, trans) {
+    .Call(`_DynNet_fct_pred_curlev_slope`, ptGK_delta, ptGK, xti1, xti2, xti1_intY, xti2_intY, ui_r, delta_i, param_surv, param_surv_intY, assoc, nD, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, param_basehaz, basehaz, knots_surv, gamma_X, nE, survfunc, trans)
+}
+
+#' Computes the individual likelihood of time-to-event, conditionally on the random effects
+#' @param ui_r vector of individual random effects
+#' @param t_i individual time-to-event
+#' @param delta_i individual status of event
+#' @param xti1 vector of individual covariates for first event
+#' @param xti2 vector of individual covariates for competing event
+#' @param param_surv regression parameters
+#' @param param_basehaz parameters for baseline hazard function
+#' @param basehaz type of baseline hazard function
+#' @param knots_surv vector of knots if basehaz == Splines
+#' @param assoc function of the random effects that captures association 
+#'     (0: random intercept, 1: random slope, 2: random intercept and slope, 3: current value, 4: current slope, 5: current value and slope)
+#' @param truncation boolean, indicating if left truncation or not
+f_survival_ui <- function(ui_r, t_0i, t_i, delta_i, xti1, xti2, xti1_intY, xti2_intY, param_surv, param_surv_intY, param_basehaz, basehaz, knots_surv, assoc, truncation, nD, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, nE) {
+    .Call(`_DynNet_f_survival_ui`, ui_r, t_0i, t_i, delta_i, xti1, xti2, xti1_intY, xti2_intY, param_surv, param_surv_intY, param_basehaz, basehaz, knots_surv, assoc, truncation, nD, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, nE)
 }
 
 #' Function that transforms a vector to a matrix

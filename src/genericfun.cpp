@@ -467,8 +467,7 @@ arma::mat matNui(int nD, arma::vec& tau_i, double DeltaT, arma::mat& x0i, arma::
 }
 
 //===========================================================================================
-//'  Function that constructs the matrix matYtild_ui (Lambda_i|ui), the expectation of the processes at time t_j given ui
- //'  
+ //' @title Function that constructs the matrix matYtild_ui (Lambda_i|ui), the expectation of the processes at time t_j given ui
  //' @param nD an integer indicating the number of processes
  //' @param tau_i vector of integers indicating times 
  //' @param DeltaT double that indicates the discretization step
@@ -652,7 +651,6 @@ bool Isnotnan(double i) {
 //' @return a double
 //' @export
 //' 
-
 // [[Rcpp::export]]
 double f_marker(arma::mat& Lambdai, int nD, arma::mat matrixP, arma::vec& tau, arma::vec& tau_i, double DeltaT, arma::mat& Ytildi, arma::mat& YtildPrimi, arma::mat& x0i, arma::colvec& alpha_mu0,
                 arma::mat& xi, arma::vec& paraSig, arma::colvec& alpha_mu, arma::mat& G_mat_A_0_to_tau_i, arma::colvec& paraEtha2, arma::vec& if_link, arma::colvec& zitr, 
@@ -1013,10 +1011,12 @@ double f_marker_ui(arma::vec& Lambdai, int nD, arma::mat matrixP, arma::vec& tau
 // /*============================================================
 // Computes the hazard risk or survival if surv == true
 // ==============================================================*/
-//' gammaX vector of linear predictors for 1 and 2 transitions (including association on random effects if assoc <=2)
-//' surv Computation of survival funtion (1) or risk function (0)
-//' trans index for computation of survival function on all transitions (-1), on first transition(0), or second transition (1) for nE=2
+//' Computes the hazard risk or survival if surv == true
+//' @param gammaX vector of linear predictors for 1 and 2 transitions (including association on random effects if assoc <=2)
+//' @param surv Computation of survival funtion (1) or risk function (0)
+//' @param trans index for computation of survival function on all transitions (-1), on first transition(0), or second transition (1) for nE=2
 //' when 
+// [[Rcpp::export]]
 double fct_risq_base(double t,  int status, arma::vec& param_basehaz, int basehaz, arma::vec& knots_surv, 
                      int nE, arma::vec& gammaX, bool surv, int trans){
   double out=0;
@@ -1071,14 +1071,15 @@ double fct_risq_base(double t,  int status, arma::vec& param_basehaz, int baseha
 // /*============================================================
 // Computes the hazard risk or survival function for a vector or timepoints 
 // ==============================================================*/
-//' ptGK_delta vector of projections of GK nodes onto grid of delta
-//' ptGK vector of individual GK nodes
-//' alpha vector of association parameters
-//' delta_i event status 
-//' survfunc indicator if output is survival function or hazard risk
-//' trans index for computation of survival/risk function on all transitions (-1), on first transition(0), or second transition (1)
-
-vec fct_pred_curlev_slope(arma::vec& ptGK_delta, arma::vec& ptGK, arma::colvec& xti1, arma::colvec& xti2, 
+//' @title Computes the hazard risk or survival function for a vector or timepoints
+//' @param ptGK_delta vector of projections of GK nodes onto grid of delta
+//' @param ptGK vector of individual GK nodes
+//' @param alpha vector of association parameters
+//' @param delta_i event status 
+//' @param survfunc indicator if output is survival function or hazard risk
+//' @param trans index for computation of survival/risk function on all transitions (-1), on first transition(0), or second transition (1)
+// [[Rcpp::export]]
+arma::vec fct_pred_curlev_slope(arma::vec& ptGK_delta, arma::vec& ptGK, arma::colvec& xti1, arma::colvec& xti2, 
                           arma::mat& xti1_intY, arma::mat& xti2_intY, arma::vec& ui_r, int delta_i, arma::colvec& param_surv, arma::colvec& param_surv_intY, int assoc, 
                           int nD, double DeltaT, arma::mat& x0i, arma::colvec& alpha_mu0, arma::mat& xi, arma::colvec& alpha_mu,
                           arma::mat& G_mat_A_0_to_tau_i, arma::mat& zi, arma::vec& param_basehaz, int basehaz, arma::vec& knots_surv, 
@@ -1320,20 +1321,20 @@ double fct_surv_Konrod(double t_i, arma::colvec& xti1, arma::colvec& xti2, arma:
 // /*============================================================
 // Computes the individual likelihood of time-to-event, conditionally on the random effects
 // ==============================================================*/
-//
-//' ui_r vector of individual random effects
-//' t_i individual time-to-event
-//' delta_i individual status of event
-//' xti1 vector of individual covariates for first event
-//' xti2 vector of individual covariates for competing event
-//' param_surv regression parameters
-//' param_basehaz parameters for baseline hazard function
-//' basehaz type of baseline hazard function
-//' knots_surv vector of knots if basehaz == Splines
-//' assoc function of the random effects that captures association 
-//' //'    (0: random intercept, 1: random slope, 2: random intercept and slope, 3: current value, 4: current slope, 5: current value and slope)
-//' truncation boolean, indicating if left truncation or not
-//' 
+//' Computes the individual likelihood of time-to-event, conditionally on the random effects
+//' @param ui_r vector of individual random effects
+//' @param t_i individual time-to-event
+//' @param delta_i individual status of event
+//' @param xti1 vector of individual covariates for first event
+//' @param xti2 vector of individual covariates for competing event
+//' @param param_surv regression parameters
+//' @param param_basehaz parameters for baseline hazard function
+//' @param basehaz type of baseline hazard function
+//' @param knots_surv vector of knots if basehaz == Splines
+//' @param assoc function of the random effects that captures association 
+//'     (0: random intercept, 1: random slope, 2: random intercept and slope, 3: current value, 4: current slope, 5: current value and slope)
+//' @param truncation boolean, indicating if left truncation or not
+// [[Rcpp::export]]
 arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i,int delta_i, arma::colvec& xti1, arma::colvec& xti2, 
                      arma::mat& xti1_intY, arma::mat& xti2_intY,  arma::colvec& param_surv, arma::colvec& param_surv_intY,
                      arma::vec& param_basehaz, int basehaz, arma::vec& knots_surv, int assoc, bool truncation,
