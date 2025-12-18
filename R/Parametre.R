@@ -232,7 +232,7 @@ Parametre <- function(K, nD, vec_ncol_x0n, n_col_x, nb_RE, stochErr=FALSE, index
       #   np_surv <- dim(Survdata)[2]-3 + ifelse(assoc%in%c(0, 1, 3, 4),1,2)
       # }
       np_baz <- ifelse(basehaz=="Weibull",2, 0)# changer 0!!
-      
+
       for (jj in 1:nE){
         para_basehaz <- c(para_basehaz, paras.ini[(p+1) : (p + np_baz)])  
         p <- p + np_baz  # change here?

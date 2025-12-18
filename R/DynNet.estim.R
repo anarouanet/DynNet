@@ -275,7 +275,7 @@ DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky
                                          nE = data$nE, Xsurv1 = as.matrix(data$Xsurv1), Xsurv2 = as.matrix(data$Xsurv2), 
                                          clustertype = cluster_type, ii=i)
                   ,silent = T)
-      if(inherits(temp ,'try-error')){
+      if(inherits(optim_ui ,'try-error')){
         ui_hat[i,] <- rep(NA,dim(ui_hat)[2])
       }else{
         ui_hat[i,] <- optim_ui$b
