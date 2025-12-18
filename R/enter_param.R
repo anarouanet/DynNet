@@ -76,7 +76,6 @@
 #' @param fix.p.asso2 indicator if the parameters \code{p.asso2} are fixed (e.g. not estimated).
 #' @param p.asso.int2 initial values for the interactions between covariates and functions of the latent processes in the second transition model (competing risks setting only). Default to NULL.
 #' @param fix.p.asso.int2 indicator if the parameters \code{p.asso.int2} are fixed (e.g. not estimated).
-#' @details 
 #' @return A list with the following elements:
 #' \describe{
 #'   \item{paras.ini}{Vector of initial values for all parameters.}
@@ -85,18 +84,6 @@
 #'}
 #' @export
 #' @importFrom splines bs
-#' @usage enter_param(structural.model, 
-#'                    measurement.model, 
-#'                    Time, 
-#'                    subject, 
-#'                    data,
-#'                    p.initlev, 
-#'                    p.slope, 
-#'                    varcovRE, 
-#'                    transitionmatrix, 
-#'                    var.errors, 
-#'                    transformationY,
-#'                    ...)
 #' @examples
 #'         
 #' ### example 1
@@ -187,7 +174,7 @@
 enter_param<-function(structural.model, 
                       measurement.model,
                       Time,
-                      subject = "ID",
+                      subject,
                       data,
                       Tentry = NULL,
                       Event = NULL,

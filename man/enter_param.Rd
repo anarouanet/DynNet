@@ -14,8 +14,7 @@ enter_param(structural.model,
                    varcovRE, 
                    transitionmatrix, 
                    var.errors, 
-                   transformationY,
-                   ...)
+                   transformationY)
 }
 \arguments{
 \item{structural.model}{a list of 7 arguments used to specify the structural model: \describe{
