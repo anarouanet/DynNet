@@ -61,17 +61,17 @@ matric containing at time t}
 
 \item{paraEtha2}{transformation parameters}
 
+\item{if_link}{link function indicator, 0 if linear, 1 if splines, 2 if thresholds}
+
+\item{zitr}{minY and maxY of observed ordinal Y}
+
 \item{ide}{indicator if the values between zitr(0) and zitr(1) are observed in Y}
 
-\item{if_link:}{link function indicator, 0 if linear, 1 if splines, 2 if thresholds}
+\item{paras_k}{number of parameters for link function for each marker k}
 
-\item{zitr:}{minY and maxY of observed ordinal Y}
+\item{K2_lambda_t}{vector indicating to which latent process corresponds each value of Lambdai}
 
-\item{paras_k:}{number of parameters for link function for each marker k}
-
-\item{K2_lambda_t:}{vector indicating to which latent process corresponds each value of Lambdai}
-
-\item{K2_lambda:}{vector indicating to which latent process corresponds each marker}
+\item{K2_lambda}{vector indicating to which latent process corresponds each marker}
 }
 \value{
 a double

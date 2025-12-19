@@ -34,6 +34,8 @@ f_survival_ui(
 \arguments{
 \item{ui_r}{vector of individual random effects}
 
+\item{t_0i}{individual entry time}
+
 \item{t_i}{individual time-to-event}
 
 \item{delta_i}{individual status of event}
@@ -42,7 +44,13 @@ f_survival_ui(
 
 \item{xti2}{vector of individual covariates for competing event}
 
+\item{xti1_intY}{vector of individual covariates for first event}
+
+\item{xti2_intY}{vector of individual covariates for competing event}
+
 \item{param_surv}{regression parameters}
+
+\item{param_surv_intY}{regression parameters}
 
 \item{param_basehaz}{parameters for baseline hazard function}
 
@@ -54,6 +62,24 @@ f_survival_ui(
 (0: random intercept, 1: random slope, 2: random intercept and slope, 3: current value, 4: current slope, 5: current value and slope)}
 
 \item{truncation}{boolean, indicating if left truncation or not}
+
+\item{nD}{number of latent processes}
+
+\item{DeltaT}{discretization step}
+
+\item{x0i}{design matrix associatied with fixed effects on initial level}
+
+\item{alpha_mu0}{parameters on initial level}
+
+\item{xi}{design matrix associatied with fixed effects on slope}
+
+\item{alpha_mu}{parameters in slope}
+
+\item{G_mat_A_0_to_tau_i}{matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition}
+
+\item{zi}{design matrix associatied with random effects}
+
+\item{nE}{number of events}
 }
 \description{
 Computes the individual likelihood of time-to-event, conditionally on the random effects

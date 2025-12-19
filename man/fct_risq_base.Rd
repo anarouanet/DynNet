@@ -17,6 +17,18 @@ fct_risq_base(
 )
 }
 \arguments{
+\item{t}{time}
+
+\item{status}{Event status}
+
+\item{param_basehaz}{parameter of baseline hazard}
+
+\item{basehaz}{type of baseline hazard}
+
+\item{knots_surv}{knots in baseline hazard}
+
+\item{nE}{nombre of events}
+
 \item{gammaX}{vector of linear predictors for 1 and 2 transitions (including association on random effects if assoc <=2)}
 
 \item{surv}{Computation of survival funtion (1) or risk function (0)}

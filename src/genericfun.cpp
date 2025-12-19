@@ -634,19 +634,19 @@ bool Isnotnan(double i) {
 //' @param Ytildi vector of individual transformed outcomes
 //' @param YtildPrimi vector of individual transformed derivatives
 //' @param x0i model.matrix for baseline's submodel
+//' @param alpha_mu0 a vector of parameters associated to the model.matrix for the baseline's submodel
 //' @param xi model.matrix for change's submodel
 //' @param paraSig variances of marker-specific measurement errors
-//' @param alpha_mu0 a vector of parameters associated to the model.matrix for the baseline's submodel
 //' @param alpha_mu a vector of parameters associated to the model.matrix for the change's submodel
 //' @param G_mat_A_0_to_tau_i matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition
 //' matric containing at time t
 //' @param paraEtha2 transformation parameters
-//' @param if_link: link function indicator, 0 if linear, 1 if splines, 2 if thresholds
-//' @param zitr: minY and maxY of observed ordinal Y
+//' @param if_link link function indicator, 0 if linear, 1 if splines, 2 if thresholds
+//' @param zitr minY and maxY of observed ordinal Y
 //' @param ide indicator if the values between zitr(0) and zitr(1) are observed in Y 
-//' @param paras_k: number of parameters for link function for each marker k
-//' @param K2_lambda_t: vector indicating to which latent process corresponds each value of Lambdai
-//' @param K2_lambda: vector indicating to which latent process corresponds each marker
+//' @param paras_k number of parameters for link function for each marker k
+//' @param K2_lambda_t vector indicating to which latent process corresponds each value of Lambdai
+//' @param K2_lambda vector indicating to which latent process corresponds each marker
 //' 
 //' @return a double
 //' @export
@@ -1012,6 +1012,12 @@ double f_marker_ui(arma::vec& Lambdai, int nD, arma::mat matrixP, arma::vec& tau
 // Computes the hazard risk or survival if surv == true
 // ==============================================================*/
 //' Computes the hazard risk or survival if surv == true
+//' @param t time
+//' @param status Event status
+//' @param param_basehaz parameter of baseline hazard
+//' @param basehaz type of baseline hazard
+//' @param knots_surv knots in baseline hazard
+//' @param nE nombre of events
 //' @param gammaX vector of linear predictors for 1 and 2 transitions (including association on random effects if assoc <=2)
 //' @param surv Computation of survival funtion (1) or risk function (0)
 //' @param trans index for computation of survival function on all transitions (-1), on first transition(0), or second transition (1) for nE=2
@@ -1074,8 +1080,28 @@ double fct_risq_base(double t,  int status, arma::vec& param_basehaz, int baseha
 //' @title Computes the hazard risk or survival function for a vector or timepoints
 //' @param ptGK_delta vector of projections of GK nodes onto grid of delta
 //' @param ptGK vector of individual GK nodes
-//' @param alpha vector of association parameters
-//' @param delta_i event status 
+//' @param xti1 design matrix for transition 1
+//' @param xti2 design matrix for transition 2
+//' @param xti1_intY design matrix for interactions in transition 1
+//' @param xti2_intY design matrix for interactions in transition 2
+//' @param ui_r quasi MC sequence of random effects
+//' @param delta_i individual status of event
+//' @param param_surv parameters of time to event models
+//' @param param_surv_intY interaction parameters of time to event models
+//' @param assoc type of association between time to events and markers 
+//' @param nD number of latent processes
+//' @param DeltaT discretization step
+//' @param x0i design matrix for model on initial model
+//' @param alpha_mu0 fixed effects for model on initial level
+//' @param xi design matrix for model on slope model
+//' @param alpha_mu fixed effects for slope model
+//' @param G_mat_A_0_to_tau_i matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition
+//' @param zi design matrix for random effects on slope
+//' @param param_basehaz parameters of baseline hazard
+//' @param basehaz type of baseline hazard
+//' @param knots_surv knots in baseline hazard
+//' @param gamma_X fixed effects on transitions
+//' @param nE number of events
 //' @param survfunc indicator if output is survival function or hazard risk
 //' @param trans index for computation of survival/risk function on all transitions (-1), on first transition(0), or second transition (1)
 // [[Rcpp::export]]
@@ -1323,17 +1349,30 @@ double fct_surv_Konrod(double t_i, arma::colvec& xti1, arma::colvec& xti2, arma:
 // ==============================================================*/
 //' Computes the individual likelihood of time-to-event, conditionally on the random effects
 //' @param ui_r vector of individual random effects
+//' @param t_0i individual entry time
 //' @param t_i individual time-to-event
 //' @param delta_i individual status of event
 //' @param xti1 vector of individual covariates for first event
 //' @param xti2 vector of individual covariates for competing event
+//' @param xti1_intY vector of individual covariates for first event
+//' @param xti2_intY vector of individual covariates for competing event
 //' @param param_surv regression parameters
+//' @param param_surv_intY regression parameters
 //' @param param_basehaz parameters for baseline hazard function
 //' @param basehaz type of baseline hazard function
 //' @param knots_surv vector of knots if basehaz == Splines
+//' @param truncation boolean, indicating if left truncation or not
+//' @param nD number of latent processes
+//' @param DeltaT discretization step
+//' @param x0i design matrix associatied with fixed effects on initial level
+//' @param alpha_mu0 parameters on initial level
+//' @param xi design matrix associatied with fixed effects on slope
+//' @param alpha_mu parameters in slope
+//' @param G_mat_A_0_to_tau_i matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition
+//' @param zi design matrix associatied with random effects
+//' @param nE number of events
 //' @param assoc function of the random effects that captures association 
 //'     (0: random intercept, 1: random slope, 2: random intercept and slope, 3: current value, 4: current slope, 5: current value and slope)
-//' @param truncation boolean, indicating if left truncation or not
 // [[Rcpp::export]]
 arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i,int delta_i, arma::colvec& xti1, arma::colvec& xti2, 
                      arma::mat& xti1_intY, arma::mat& xti2_intY,  arma::colvec& param_surv, arma::colvec& param_surv_intY,

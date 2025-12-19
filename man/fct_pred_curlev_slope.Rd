@@ -38,13 +38,53 @@ fct_pred_curlev_slope(
 
 \item{ptGK}{vector of individual GK nodes}
 
-\item{delta_i}{event status}
+\item{xti1}{design matrix for transition 1}
+
+\item{xti2}{design matrix for transition 2}
+
+\item{xti1_intY}{design matrix for interactions in transition 1}
+
+\item{xti2_intY}{design matrix for interactions in transition 2}
+
+\item{ui_r}{quasi MC sequence of random effects}
+
+\item{delta_i}{individual status of event}
+
+\item{param_surv}{parameters of time to event models}
+
+\item{param_surv_intY}{interaction parameters of time to event models}
+
+\item{assoc}{type of association between time to events and markers}
+
+\item{nD}{number of latent processes}
+
+\item{DeltaT}{discretization step}
+
+\item{x0i}{design matrix for model on initial model}
+
+\item{alpha_mu0}{fixed effects for model on initial level}
+
+\item{xi}{design matrix for model on slope model}
+
+\item{alpha_mu}{fixed effects for slope model}
+
+\item{G_mat_A_0_to_tau_i}{matrix containing  Prod(A_t)t=0,tau_i where A_t is the transition}
+
+\item{zi}{design matrix for random effects on slope}
+
+\item{param_basehaz}{parameters of baseline hazard}
+
+\item{basehaz}{type of baseline hazard}
+
+\item{knots_surv}{knots in baseline hazard}
+
+\item{gamma_X}{fixed effects on transitions}
+
+\item{nE}{number of events}
 
 \item{survfunc}{indicator if output is survival function or hazard risk}
 
 \item{trans}{index for computation of survival/risk function on all transitions (-1), on first transition(0), or second transition (1)}
-
-\item{alpha}{vector of association parameters}
 }
 \description{
 Computes the hazard risk or survival function for a vector or timepoints
