@@ -23,8 +23,6 @@ enter_param(
   fix.varcovRE = rep(0, length(varcovRE)),
   transitionmatrix,
   fix.transitionmatrix = rep(0, length(transitionmatrix)),
-  parab = NULL,
-  fix.parab = rep(0, length(parab)),
   var.errors,
   fix.var.errors = rep(0, length(var.errors)),
   transformationY,
@@ -110,41 +108,59 @@ enter_param(
 
 \item{p.initlev}{initial values for the fixed effects of the model describing the initial level of the processes}
 
+\item{fix.p.initlev}{indicator if the parameters \code{p.initlev} are fixed.}
+
 \item{p.slope}{initial values for the fixed effects of the model describing the slope of the processes.}
+
+\item{fix.p.slope}{indicator if the parameters \code{p.slope} are fixed.}
 
 \item{varcovRE}{initial values for the lower-triangular matrix in the Cholesky decomposition of the random-effects variance–covariance matrix.}
 
+\item{fix.varcovRE}{indicator if the parameters \code{varcovRE} are fixed.}
+
 \item{transitionmatrix}{initial values for the transition matrix}
+
+\item{fix.transitionmatrix}{indicator if the parameters \code{transitionmatrix} are fixed.}
 
 \item{var.errors}{initial values for the marker-specific measurement error variances.}
 
+\item{fix.var.errors}{indicator if the parameters \code{var.errors} are fixed.}
+
 \item{transformationY}{initial values for the marker-specific transformation functions (see links in DynNet help)}
+
+\item{fix.transformationY}{indicator if the parameters \code{transformationY} are fixed.}
 
 \item{baseline1}{initial values for the baseline hazard function in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).}
 
+\item{fix.baseline1}{indicator if the parameters \code{baseline1} are fixed.}
+
 \item{p.X1}{initial values for the covariate fixed effects (excluding association and latent-process interaction parameters)in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).}
 
-\item{fix.p.X1}{indicator if the parameters \code{p.X1} are fixed (e.g. not estimated).}
+\item{fix.p.X1}{indicator if the parameters \code{p.X1} are fixed.}
+
+\item{p.asso1}{initial values for the association parameters in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).}
+
+\item{fix.p.asso1}{indicator if the parameters \code{p.asso1} are fixed.}
 
 \item{p.asso.int1}{initial values for the interactions between covariates and functions of the latent processes in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).}
 
-\item{fix.p.asso.int1}{indicator if the parameters \code{p.asso.int1} are fixed (e.g. not estimated).}
+\item{fix.p.asso.int1}{indicator if the parameters \code{p.asso.int1} are fixed.}
 
 \item{baseline2}{initial values for the baseline hazard function in the second transition model (competing risks setting only). Default to NULL.}
 
-\item{fix.baseline2}{indicator if the parameters \code{baseline2} are fixed (e.g. not estimated).}
+\item{fix.baseline2}{indicator if the parameters \code{baseline2} are fixed.}
 
 \item{p.X2}{initial values for the covariate fixed effects (excluding association and latent-process interaction parameters) in the second transition model (competing risks setting only). Default to NULL.}
 
-\item{fix.p.X2}{indicator if the parameters \code{p.X2} are fixed (e.g. not estimated).}
+\item{fix.p.X2}{indicator if the parameters \code{p.X2} are fixed.}
 
 \item{p.asso2}{initial values for the association parameters in the second transition model (competing risks setting only). Default to NULL.}
 
-\item{fix.p.asso2}{indicator if the parameters \code{p.asso2} are fixed (e.g. not estimated).}
+\item{fix.p.asso2}{indicator if the parameters \code{p.asso2} are fixed.}
 
 \item{p.asso.int2}{initial values for the interactions between covariates and functions of the latent processes in the second transition model (competing risks setting only). Default to NULL.}
 
-\item{fix.p.asso.int2}{indicator if the parameters \code{p.asso.int2} are fixed (e.g. not estimated).}
+\item{fix.p.asso.int2}{indicator if the parameters \code{p.asso.int2} are fixed.}
 }
 \value{
 A list with the following elements:

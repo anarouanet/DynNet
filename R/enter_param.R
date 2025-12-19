@@ -58,24 +58,33 @@
 #' @param basehaz type of baseline hazard function
 #' @param assocT specifies the type of association between the time-to-event(s) and the latent process(es). Values include "r.intercept" for random intercept, "r.slope" for random slope, "r.intercept/slope" for both random intercept and slope, "c.value" for current value. 
 #' @param p.initlev initial values for the fixed effects of the model describing the initial level of the processes
+#' @param fix.p.initlev indicator if the parameters \code{p.initlev} are fixed.
 #' @param p.slope initial values for the fixed effects of the model describing the slope of the processes.
+#' @param fix.p.slope indicator if the parameters \code{p.slope} are fixed.
 #' @param varcovRE initial values for the lower-triangular matrix in the Cholesky decomposition of the random-effects variance–covariance matrix.
+#' @param fix.varcovRE indicator if the parameters \code{varcovRE} are fixed.
 #' @param transitionmatrix initial values for the transition matrix
+#' @param fix.transitionmatrix indicator if the parameters \code{transitionmatrix} are fixed.
 #' @param var.errors initial values for the marker-specific measurement error variances.
+#' @param fix.var.errors indicator if the parameters \code{var.errors} are fixed.
 #' @param transformationY initial values for the marker-specific transformation functions (see links in DynNet help)
+#' @param fix.transformationY indicator if the parameters \code{transformationY} are fixed.
 #' @param baseline1 initial values for the baseline hazard function in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).
+#' @param fix.baseline1 indicator if the parameters \code{baseline1} are fixed.
 #' @param p.X1 initial values for the covariate fixed effects (excluding association and latent-process interaction parameters)in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).
-#' @param fix.p.X1 indicator if the parameters \code{p.X1} are fixed (e.g. not estimated).
+#' @param fix.p.X1 indicator if the parameters \code{p.X1} are fixed.
+#' @param p.asso1 initial values for the association parameters in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).
+#' @param fix.p.asso1 indicator if the parameters \code{p.asso1} are fixed.
 #' @param p.asso.int1 initial values for the interactions between covariates and functions of the latent processes in the time-to-event model (in the survival setting) or in the first transition model (in the competing risks setting).
-#' @param fix.p.asso.int1 indicator if the parameters \code{p.asso.int1} are fixed (e.g. not estimated).
+#' @param fix.p.asso.int1 indicator if the parameters \code{p.asso.int1} are fixed.
 #' @param baseline2 initial values for the baseline hazard function in the second transition model (competing risks setting only). Default to NULL.
-#' @param fix.baseline2 indicator if the parameters \code{baseline2} are fixed (e.g. not estimated).
+#' @param fix.baseline2 indicator if the parameters \code{baseline2} are fixed.
 #' @param p.X2 initial values for the covariate fixed effects (excluding association and latent-process interaction parameters) in the second transition model (competing risks setting only). Default to NULL.
-#' @param fix.p.X2 indicator if the parameters \code{p.X2} are fixed (e.g. not estimated).
+#' @param fix.p.X2 indicator if the parameters \code{p.X2} are fixed.
 #' @param p.asso2 initial values for the association parameters in the second transition model (competing risks setting only). Default to NULL.
-#' @param fix.p.asso2 indicator if the parameters \code{p.asso2} are fixed (e.g. not estimated).
+#' @param fix.p.asso2 indicator if the parameters \code{p.asso2} are fixed.
 #' @param p.asso.int2 initial values for the interactions between covariates and functions of the latent processes in the second transition model (competing risks setting only). Default to NULL.
-#' @param fix.p.asso.int2 indicator if the parameters \code{p.asso.int2} are fixed (e.g. not estimated).
+#' @param fix.p.asso.int2 indicator if the parameters \code{p.asso.int2} are fixed.
 #' @return A list with the following elements:
 #' \describe{
 #'   \item{paras.ini}{Vector of initial values for all parameters.}
@@ -189,8 +198,6 @@ enter_param<-function(structural.model,
                       fix.varcovRE=rep(0,length(varcovRE)),
                       transitionmatrix,
                       fix.transitionmatrix=rep(0,length(transitionmatrix)),
-                      parab=NULL,
-                      fix.parab=rep(0,length(parab)),
                       var.errors,
                       fix.var.errors=rep(0,length(var.errors)),
                       transformationY,
@@ -431,11 +438,7 @@ enter_param<-function(structural.model,
       #zitr[i, nbzitr0] <- maxY0[i]
       zitr <- c(zitr, minY0[i], maxY0[i])
     }
-    
-    if(!is.null(type_int)){
-      if(!type_int %in% c("MC", "sobol", "halton", "torus"))
-        stop("With the thresholds link function, type_int should be either antithetic, sobol, halton or torus. antithetic not developed yet, sorry.")
-    }
+
     
   }else{
     zitr <- 0
@@ -918,6 +921,8 @@ enter_param<-function(structural.model,
   # paraB
   paraB <- NULL
   stochErr = F
+  parab=NULL
+  fix.parab=NULL
   if(stochErr==TRUE){
     if(length(parab)!=length((p+1):(p + nD))){
       stop("paraB should contain ",length((p+1):(p + nD))," parameters.")
