@@ -77,11 +77,11 @@ arma::mat predi(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
   // ==== Computering of GrdZi ==============================================================
   for(int t = 0; t<= maxTau; t++){
     if(t==0){
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
     }
     else{
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = DeltaT*(zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-        G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = DeltaT*(zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+        G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
     }
   }
   mat matVX_i = zeros(nD*m_i,nD*m_i); // initialisation of matrix matVX_i ?
@@ -94,26 +94,26 @@ arma::mat predi(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
       mat prodA_0_to_t_j_1 = diagmat(vect);
       mat prodA_0_to_t_k_1 = diagmat(vect);
       if(tau_i(j)>0){
-        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
       }
       if(tau_i(k)>0){
-        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
       }
-      matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1))) +=
+      matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1))) +=
         pow(DeltaT, (tau_i(j)+tau_i(k)))*(prodA_0_to_t_j_1*z0i)*matDw*(z0i*prodA_0_to_t_k_1).t() +
-        pow(DeltaT, tau_i(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-        pow(DeltaT, tau_i(k))*(GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
-        (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t();
+        pow(DeltaT, tau_i(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+        pow(DeltaT, tau_i(k))*(GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
+        (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t();
 
-      VYtild_iFull(span(p_Yj,(p_Yj+K-1)), span((p_Yk), (p_Yk+K-1)))  = matrixP*matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
+      VYtild_iFull(arma::span(p_Yj,(p_Yj+K-1)), arma::span((p_Yk), (p_Yk+K-1)))  = matrixP*matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
 
       
-      VXYtild_iFull(span(p_Xj,(p_Xj+nD-1)), span((p_Yk), (p_Yk+K-1))) = matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
+      VXYtild_iFull(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Yk), (p_Yk+K-1))) = matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
 
       // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
       if(k != j){
-        matVX_i(span(p_Xk, (p_Xk+nD-1)), span(p_Xj,(p_Xj+nD-1))) = matVX_i(span(p_Xj,(p_Xj+nD-1)), span(p_Xk, (p_Xk+nD-1))).t();
-        VYtild_iFull(span(p_Yk,(p_Yk+K-1)), span((p_Yj), (p_Yj+K-1))) = VYtild_iFull(span(p_Yj,(p_Yj+K-1)), span((p_Yk), (p_Yk+K-1))).t();
+        matVX_i(arma::span(p_Xk, (p_Xk+nD-1)), arma::span(p_Xj,(p_Xj+nD-1))) = matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span(p_Xk, (p_Xk+nD-1))).t();
+        VYtild_iFull(arma::span(p_Yk,(p_Yk+K-1)), arma::span((p_Yj), (p_Yj+K-1))) = VYtild_iFull(arma::span(p_Yj,(p_Yj+K-1)), arma::span((p_Yk), (p_Yk+K-1))).t();
       }
 
       p_Xk += nD; // incrementing p_k
@@ -174,7 +174,7 @@ arma::mat predi(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
   mat mat_Xi_hat = zeros(m_i,nD);
 
   for(int t=0; t< m_i; t++){
-    mat_Xi_hat.row(t) = Xi_hat(span(t*nD,((t+1)*nD-1))).t();
+    mat_Xi_hat.row(t) = Xi_hat(arma::span(t*nD,((t+1)*nD-1))).t();
   }
   mat mat_Nu_YtildCond_i = mat_Xi_hat*matrixP.t();
   pred_SSYtildFull = mat_Nu_YtildCond_i; // subject-specific predictions in transformed scale
@@ -208,7 +208,7 @@ arma::mat predi(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
     int kk = 0;
     for(int k=0; k<K; k++){
       if(if_link[k] == 0){
-        vec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+        vec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
         mat_yMn1.col(k) = mat_ytildM_i.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i);
         mat_ySSn1.col(k) = mat_ytildSS_i.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i);
       }
@@ -260,7 +260,7 @@ arma::mat predi(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
       kk = 0; //remise a zero du compteur
       for(int k=0; k<K; k++){
         if(if_link[k] == 1){
-          colvec ParamTransformYk = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+          colvec ParamTransformYk = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
           ParamTransformYk[0] = log(ParamTransformYk[0]);
           //Call of R function that computes the transformation by I-splines basis and  derivates of yn
           vec knots_k = as<vec>(knots[k]);
@@ -401,11 +401,11 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
   // ==== Computering of GrdZi ==============================================================
   for(int t = 0; t<= maxTau; t++){
     if(t==0){
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
     }
     else{
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = DeltaT*(zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-        G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = DeltaT*(zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+        G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
     }
   }
   mat matVX_i = zeros(nD*m_i,nD*m_i); // initialisation of matrix matVX_i ?
@@ -418,26 +418,26 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
       mat prodA_0_to_t_j_1 = diagmat(vect);
       mat prodA_0_to_t_k_1 = diagmat(vect);
       if(tau_i(j)>0){
-        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
       }
       if(tau_i(k)>0){
-        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
       }
-      matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1))) +=
+      matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1))) +=
         pow(DeltaT, (tau_i(j)+tau_i(k)))*(prodA_0_to_t_j_1*z0i)*matDw*(z0i*prodA_0_to_t_k_1).t() +
-        pow(DeltaT, tau_i(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-        pow(DeltaT, tau_i(k))*(GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
-        (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t();
+        pow(DeltaT, tau_i(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+        pow(DeltaT, tau_i(k))*(GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
+        (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t();
       
-      VYtild_iFull(span(p_Yj,(p_Yj+K-1)), span((p_Yk), (p_Yk+K-1)))  = matrixP*matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
+      VYtild_iFull(arma::span(p_Yj,(p_Yj+K-1)), arma::span((p_Yk), (p_Yk+K-1)))  = matrixP*matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
       
       
-      VXYtild_iFull(span(p_Xj,(p_Xj+nD-1)), span((p_Yk), (p_Yk+K-1))) = matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
+      VXYtild_iFull(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Yk), (p_Yk+K-1))) = matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
       
       // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
       if(k != j){
-        matVX_i(span(p_Xk, (p_Xk+nD-1)), span(p_Xj,(p_Xj+nD-1))) = matVX_i(span(p_Xj,(p_Xj+nD-1)), span(p_Xk, (p_Xk+nD-1))).t();
-        VYtild_iFull(span(p_Yk,(p_Yk+K-1)), span((p_Yj), (p_Yj+K-1))) = VYtild_iFull(span(p_Yj,(p_Yj+K-1)), span((p_Yk), (p_Yk+K-1))).t();
+        matVX_i(arma::span(p_Xk, (p_Xk+nD-1)), arma::span(p_Xj,(p_Xj+nD-1))) = matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span(p_Xk, (p_Xk+nD-1))).t();
+        VYtild_iFull(arma::span(p_Yk,(p_Yk+K-1)), arma::span((p_Yj), (p_Yj+K-1))) = VYtild_iFull(arma::span(p_Yj,(p_Yj+K-1)), arma::span((p_Yk), (p_Yk+K-1))).t();
       }
       
       p_Xk += nD; // incrementing p_k
@@ -497,7 +497,7 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
   mat mat_Xi_hat = zeros(m_i,nD);
   
   for(int t=0; t< m_i; t++){
-    mat_Xi_hat.row(t) = Xi_hat(span(t*nD,((t+1)*nD-1))).t();
+    mat_Xi_hat.row(t) = Xi_hat(arma::span(t*nD,((t+1)*nD-1))).t();
   }
   mat Ytild_ui_hat = matYtild_ui(nD, tau_i, DeltaT, x0i, alpha_mu0, xi, alpha_mu, G_mat_A_0_to_tau_i, zi, ui, vi);
   
@@ -541,13 +541,13 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
     int kk = 0;
     for(int k=0; k<K; k++){
       if(if_link[k] == 0){
-        vec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+        vec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
         mat_yMn1.col(k) = mat_ytildM_i.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i);
         mat_ySSn1.col(k) = mat_ytildSS_i.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i);
         mat_ySSn1_hat.col(k) = mat_ytildSS_i_hat.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i);
       }else if(if_link[k] == 2){
         
-        vec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+        vec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
         
         for(int jytild=0; jytild<mat_ytildM_i.n_rows; jytild++){
           int ind=0;
@@ -660,7 +660,7 @@ arma::mat predi_GLM(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, ar
       kk = 0; //remise a zero du compteur
       for(int k=0; k<K; k++){
         if(if_link[k] == 1){
-          colvec ParamTransformYk = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+          colvec ParamTransformYk = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
           ParamTransformYk[0] = log(ParamTransformYk[0]);
           //Call of R function that computes the transformation by I-splines basis and  derivates of yn
           vec knots_k = as<vec>(knots[k]);
@@ -823,18 +823,18 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
 
   //Identification of groups of parameters
   int ipara =0;
-  colvec alpha_mu0 = paras(span(ipara,ipara+ncol_x0-1));
+  colvec alpha_mu0 = paras(arma::span(ipara,ipara+ncol_x0-1));
   ipara += ncol_x0;
-  colvec alpha_mu = paras(span(ipara,ipara+ncol_x-1));
+  colvec alpha_mu = paras(arma::span(ipara,ipara+ncol_x-1));
   ipara += ncol_x;
-  colvec alpha_D = paras(span(ipara,ipara + nb_paraD-1));
+  colvec alpha_D = paras(arma::span(ipara,ipara + nb_paraD-1));
   ipara += nb_paraD;
-  vec vec_alpha_ij = paras(span(ipara,ipara+L*nD*nD-1));
+  vec vec_alpha_ij = paras(arma::span(ipara,ipara+L*nD*nD-1));
   ipara += L*nD*nD;
-  vec paraSig = paras(span(ipara,ipara+K-1));
+  vec paraSig = paras(arma::span(ipara,ipara+K-1));
   ipara += K;
   int nbParaTransformY = Mod_MatrixY.n_cols;
-  colvec ParaTransformY = paras(span(ipara,ipara+nbParaTransformY-1));
+  colvec ParaTransformY = paras(arma::span(ipara,ipara+nbParaTransformY-1));
   ipara += nbParaTransformY;
 
   int nb_RE = sum(sum(q0)+sum(q));
@@ -870,9 +870,9 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
   }
 
   int n_cols_matD = matD.n_cols;
-  mat matDw = matD(span(0,nD-1),span(0,nD-1));
-  mat matDw_u = DeltaT*matD(span(0,nD-1),span(nD,n_cols_matD-1));
-  mat matDu = DeltaT*matD(span(nD,n_cols_matD-1),span(nD,n_cols_matD-1))*DeltaT;
+  mat matDw = matD(arma::span(0,nD-1),arma::span(0,nD-1));
+  mat matDw_u = DeltaT*matD(arma::span(0,nD-1),arma::span(nD,n_cols_matD-1));
+  mat matDu = DeltaT*matD(arma::span(nD,n_cols_matD-1),arma::span(nD,n_cols_matD-1))*DeltaT;
   mat Sig = KmatDiag(paraSig); // noice
 
 
@@ -888,7 +888,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
     }
 
     if(if_link[k] == 1){
-      colvec ParamTransformYk = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+      colvec ParamTransformYk = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
       ParamTransformYk[0] = log(ParamTransformYk[0]);
       Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformYk;
       vec knots_k = as<vec>(knots[k]);
@@ -901,7 +901,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
       kkp += df[k]-1;
     }
     else if(if_link[k] == 0){
-      colvec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+      colvec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
       ParamTransformYk[0] = - ParamTransformYk[0]/ParamTransformYk[1];
       ParamTransformYk[1] = 1.e0/ParamTransformYk[1];
 
@@ -910,7 +910,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
       kk += df[k];
       kkp += df[k]-1;
     }else{//thresholds
-      colvec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+      colvec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
       Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformYk;
       GrilleYtild.col(k) = (GrilleY.col(k)-ParamTransformYk[0])/ParamTransformYk[1];
       kk += df[k];
@@ -920,22 +920,22 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
   // predictions=============================================
   for(int n= 0; n < N; n++ ){
     //Creation of matrix G_mat_prod_A_0_to_tau that contains all products  A(j) from t_j a Tmax: t_j \in 0, Tmax
-    mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-    mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
+    mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+    mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
 
     if(max(if_link)<2 && nE==0){
-      pred_Y.rows(p,(p+m_is[n]-1)) = predi(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-                  x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))), z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))),
-                  x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))), z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),
+      pred_Y.rows(p,(p+m_is[n]-1)) = predi(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+                  x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))), z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))),
+                  x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))), z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),
                   alpha_mu0, alpha_mu, matDw, matDw_u, matDu, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau, DeltaT,
                   GrilleY, GrilleYtild, ParaTransformY, if_link, df, minY, maxY, knots, degree, MCnr, epsPred);
     }else{
       colvec ui =  ui_hat.row(n).subvec(0,nD-1).t();
       colvec vi = ui_hat.row(n).subvec(nD,(ui_hat.n_cols-1)).t();
       
-     pred_Y.rows(p,(p+m_is[n]-1)) = predi_GLM(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-                   x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))), z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))),
-                   x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))), z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),
+     pred_Y.rows(p,(p+m_is[n]-1)) = predi_GLM(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+                   x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))), z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))),
+                   x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))), z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),
                    alpha_mu0, alpha_mu, matDw, matDw_u, matDu, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau, DeltaT,
                    GrilleY, GrilleYtild, ParaTransformY, if_link, df, minY, maxY, knots, degree, MCnr, epsPred, ui, vi);
     }
@@ -1011,18 +1011,18 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
    
    //Identification of groups of parameters
    int ipara =0;
-   colvec alpha_mu0 = paras(span(ipara,ipara+ncol_x0-1));
+   colvec alpha_mu0 = paras(arma::span(ipara,ipara+ncol_x0-1));
    ipara += ncol_x0;
-   colvec alpha_mu = paras(span(ipara,ipara+ncol_x-1));
+   colvec alpha_mu = paras(arma::span(ipara,ipara+ncol_x-1));
    ipara += ncol_x;
-   colvec alpha_D = paras(span(ipara,ipara + nb_paraD-1));
+   colvec alpha_D = paras(arma::span(ipara,ipara + nb_paraD-1));
    ipara += nb_paraD;
-   vec vec_alpha_ij = paras(span(ipara,ipara+L*nD*nD-1));
+   vec vec_alpha_ij = paras(arma::span(ipara,ipara+L*nD*nD-1));
    ipara += L*nD*nD;
-   vec paraSig = paras(span(ipara,ipara+K-1));
+   vec paraSig = paras(arma::span(ipara,ipara+K-1));
    ipara += K;
    int nbParaTransformY = Mod_MatrixY.n_cols;
-   colvec ParaTransformY = paras(span(ipara,ipara+nbParaTransformY-1));
+   colvec ParaTransformY = paras(arma::span(ipara,ipara+nbParaTransformY-1));
    ipara += nbParaTransformY;
    
    int nb_RE = sum(sum(q0)+sum(q));
@@ -1058,9 +1058,9 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
    }
    
    int n_cols_matD = matD.n_cols;
-   mat matDw = matD(span(0,nD-1),span(0,nD-1));
-   mat matDw_u = DeltaT*matD(span(0,nD-1),span(nD,n_cols_matD-1));
-   mat matDu = DeltaT*matD(span(nD,n_cols_matD-1),span(nD,n_cols_matD-1))*DeltaT;
+   mat matDw = matD(arma::span(0,nD-1),arma::span(0,nD-1));
+   mat matDw_u = DeltaT*matD(arma::span(0,nD-1),arma::span(nD,n_cols_matD-1));
+   mat matDu = DeltaT*matD(arma::span(nD,n_cols_matD-1),arma::span(nD,n_cols_matD-1))*DeltaT;
    mat Sig = KmatDiag(paraSig); // noice
    
    
@@ -1076,7 +1076,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
      }
      
      if(if_link[k] == 1){
-       colvec ParamTransformYk = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+       colvec ParamTransformYk = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
        ParamTransformYk[0] = log(ParamTransformYk[0]);
        Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformYk;
        vec knots_k = as<vec>(knots[k]);
@@ -1089,7 +1089,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
        kkp += df[k]-1;
      }
      else if(if_link[k] == 0){
-       colvec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+       colvec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
        ParamTransformYk[0] = - ParamTransformYk[0]/ParamTransformYk[1];
        ParamTransformYk[1] = 1.e0/ParamTransformYk[1];
        
@@ -1098,7 +1098,7 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
        kk += df[k];
        kkp += df[k]-1;
      }else{//thresholds
-       colvec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+       colvec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
        Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformYk;
        GrilleYtild.col(k) = (GrilleY.col(k)-ParamTransformYk[0])/ParamTransformYk[1];
        kk += df[k];
@@ -1108,12 +1108,12 @@ arma::mat pred(int K, int nD, arma::vec& mapping, arma::vec& paras, arma::vec& m
    // predictions=============================================
    for(int n= 0; n < N; n++ ){
      //Creation of matrix G_mat_prod_A_0_to_tau that contains all products  A(j) from t_j a Tmax: t_j \in 0, Tmax
-     mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-     mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
+     mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+     mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
      
-       pred_Y.rows(p,(p+m_is[n]-1)) = predi(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-                   x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))), z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))),
-                   x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))), z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),
+       pred_Y.rows(p,(p+m_is[n]-1)) = predi(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+                   x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))), z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))),
+                   x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))), z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),
                    alpha_mu0, alpha_mu, matDw, matDw_u, matDu, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau, DeltaT,
                    GrilleY, GrilleYtild, ParaTransformY, if_link, df, minY, maxY, knots, degree, MCnr, epsPred);
      
@@ -1180,11 +1180,11 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
   // ==== Computering of GrdZi ==============================================================
   for(int t = 0; t<= maxTau; t++){
     if(t==0){
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
     }
     else{
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = DeltaT*(zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-        G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = DeltaT*(zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+        G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
     }
   }
   mat matVX_i = zeros(nD*m_i,nD*m_i); // initialisation of matrix matVX_i 
@@ -1197,25 +1197,25 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
       mat prodA_0_to_t_j_1 = diagmat(vect);
       mat prodA_0_to_t_k_1 = diagmat(vect);
       if(tau_i(j)>0){
-        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
       }
       if(tau_i(k)>0){
-        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
       }
-      matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1))) +=
+      matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1))) +=
         pow(DeltaT, (tau_i(j)+tau_i(k)))*(prodA_0_to_t_j_1*z0i)*matDw*(z0i*prodA_0_to_t_k_1).t() +
-        pow(DeltaT, tau_i(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-        pow(DeltaT, tau_i(k))*(GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
-        (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t();
+        pow(DeltaT, tau_i(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+        pow(DeltaT, tau_i(k))*(GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
+        (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t();
       
-      VYtild_iFull(span(p_Yj,(p_Yj+K-1)), span((p_Yk), (p_Yk+K-1)))  = matrixP*matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
+      VYtild_iFull(arma::span(p_Yj,(p_Yj+K-1)), arma::span((p_Yk), (p_Yk+K-1)))  = matrixP*matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
       
-      VXYtild_iFull(span(p_Xj,(p_Xj+nD-1)), span((p_Yk), (p_Yk+K-1))) = matVX_i(span(p_Xj,(p_Xj+nD-1)), span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
+      VXYtild_iFull(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Yk), (p_Yk+K-1))) = matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span((p_Xk), (p_Xk+nD-1)))*matrixP.t();
       
       // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
       if(k != j){
-        matVX_i(span(p_Xk, (p_Xk+nD-1)), span(p_Xj,(p_Xj+nD-1))) = matVX_i(span(p_Xj,(p_Xj+nD-1)), span(p_Xk, (p_Xk+nD-1))).t();
-        VYtild_iFull(span(p_Yk,(p_Yk+K-1)), span((p_Yj), (p_Yj+K-1))) = VYtild_iFull(span(p_Yj,(p_Yj+K-1)), span((p_Yk), (p_Yk+K-1)));
+        matVX_i(arma::span(p_Xk, (p_Xk+nD-1)), arma::span(p_Xj,(p_Xj+nD-1))) = matVX_i(arma::span(p_Xj,(p_Xj+nD-1)), arma::span(p_Xk, (p_Xk+nD-1))).t();
+        VYtild_iFull(arma::span(p_Yk,(p_Yk+K-1)), arma::span((p_Yj), (p_Yj+K-1))) = VYtild_iFull(arma::span(p_Yj,(p_Yj+K-1)), arma::span((p_Yk), (p_Yk+K-1)));
       }
       
       p_Xk += nD; // incrementing p_k
@@ -1272,7 +1272,7 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
     int kk = 0;
     for(int k=0; k<K; k++){
       if(if_link[k] == 0){
-        vec ParamTransformYk = ParaTransformY(span(kk, (kk+df[k]-1)));
+        vec ParamTransformYk = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
         mat_yMn0.col(k) = mat_ytildM_i.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i); // updating mat_yMn0 in linear link case
         mat_yMn1.col(k) = mat_ytildM_i.col(k)*ParamTransformYk[1] + ParamTransformYk[0]*ones(m_i); // updating mat_yMn1 in linear link case
       }
@@ -1293,7 +1293,7 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
       kk = 0; //reinitialize the iterator to zero
       for(int k=0; k<K; k++){ 
         if(if_link[k] == 1){
-          colvec ParamTransformYk = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+          colvec ParamTransformYk = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
           ParamTransformYk[0] = log(ParamTransformYk[0]);
           //Call of R function that computes the transformation by I-splines basis and  derivates of yn
           vec knots_k = as<vec>(knots[k]);
@@ -1404,26 +1404,26 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
    
    //Identification stting of groups of parameters 
    int ipara =0;
-   colvec alpha_mu0 = paras(span(ipara,ipara+ncol_x0-1));
+   colvec alpha_mu0 = paras(arma::span(ipara,ipara+ncol_x0-1));
    ipara += ncol_x0;
-   colvec alpha_mu = paras(span(ipara,ipara+ncol_x-1));
+   colvec alpha_mu = paras(arma::span(ipara,ipara+ncol_x-1));
    ipara += ncol_x;
-   colvec alpha_D = paras(span(ipara,ipara + nb_paraD-1));
+   colvec alpha_D = paras(arma::span(ipara,ipara + nb_paraD-1));
    ipara += nb_paraD;
-   vec vec_alpha_ij = paras(span(ipara,ipara+L*nD*nD-1));
+   vec vec_alpha_ij = paras(arma::span(ipara,ipara+L*nD*nD-1));
    ipara += L*nD*nD;
-   vec paraSig = paras(span(ipara,ipara+K-1));
+   vec paraSig = paras(arma::span(ipara,ipara+K-1));
    ipara += K;
    int nbParaTransformY = Mod_MatrixY.n_cols;
-   colvec ParaTransformY = paras(span(ipara,ipara+nbParaTransformY-1));
+   colvec ParaTransformY = paras(arma::span(ipara,ipara+nbParaTransformY-1));
    ipara += nbParaTransformY;
    
    int nb_RE = sum(sum(q0)+sum(q));
    mat matD = DparChol(nb_RE, alpha_D);
    int n_cols_matD = matD.n_cols;
-   mat matDw = matD(span(0,nD-1),span(0,nD-1));
-   mat matDw_u = DeltaT*matD(span(0,nD-1),span(nD,n_cols_matD-1));
-   mat matDu = DeltaT*matD(span(nD,n_cols_matD-1),span(nD,n_cols_matD-1))*DeltaT;
+   mat matDw = matD(arma::span(0,nD-1),arma::span(0,nD-1));
+   mat matDw_u = DeltaT*matD(arma::span(0,nD-1),arma::span(nD,n_cols_matD-1));
+   mat matDu = DeltaT*matD(arma::span(nD,n_cols_matD-1),arma::span(nD,n_cols_matD-1))*DeltaT;
    mat Sig = KmatDiag(paraSig); // noice
    
    
@@ -1433,12 +1433,12 @@ arma::mat predi0(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma:
    for(int n= 0; n < N; n++ ){
      
      //Creation of matrix G_mat_prod_A_0_to_tau that contains all products  A(j) from t_j a Tmax: t_j \in 0, Tmax
-     mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-     mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
+     mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+     mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
      
-     pred_Y.rows(p,(p+m_is[n]-1)) = predi0(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))),
-                 x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))), z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))),
-                 x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))), z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),
+     pred_Y.rows(p,(p+m_is[n]-1)) = predi0(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))),
+                 x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))), z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))),
+                 x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))), z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),
                  alpha_mu0, alpha_mu, matDw, matDw_u, matDu, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau, DeltaT,
                  ParaTransformY, if_link, df, minY, maxY, knots, degree, MCnr, epsPred);
      

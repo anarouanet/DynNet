@@ -140,7 +140,7 @@ model.matrix and vector of parameters
 double aijt(int t, arma::vec alpha_ijl,  arma::mat modA_mat){
   //modA_mat: model.matrix
   // remember that, length(alpha_ijl) = ncol(modA_mat)
-  double a_ij_t = as_scalar(modA_mat(span(t,t),span(0,modA_mat.n_cols-1))*alpha_ijl);
+  double a_ij_t = as_scalar(modA_mat(arma::span(t,t),arma::span(0,modA_mat.n_cols-1))*alpha_ijl);
   return(a_ij_t);
 }
 
@@ -165,7 +165,7 @@ arma::vec vecaijt( int K, int t, arma::vec& vec_alpha_ij, arma::mat& modA_mat){
   arma::vec vec_a_ij_t = zeros<vec>(K*K);
   int pp = 0; // index of loop
   for( int k = 0 ; k < K*K; k++){
-    vec_a_ij_t(k) = aijt(t, vec_alpha_ij(span(pp,pp+L-1)), modA_mat);
+    vec_a_ij_t(k) = aijt(t, vec_alpha_ij(arma::span(pp,pp+L-1)), modA_mat);
     pp+=L;
   }
   return(vec_a_ij_t);
@@ -223,7 +223,7 @@ arma::mat GmatA0totaui(int K, arma::vec& vec_alpha_ij, arma::vec& tau_i, double 
 
   mat G_mat_A_0_to_tau_i = zeros<mat>(K,K*siz_tau_i);
   for (int i=0; i< siz_tau_i; i++) {
-    G_mat_A_0_to_tau_i(span(0,K-1),span(K*i,K*i+K-1)) = ConstrA(K, tau_i[i], DeltaT, vec_alpha_ij, modA_mat);
+    G_mat_A_0_to_tau_i(arma::span(0,K-1),arma::span(K*i,K*i+K-1)) = ConstrA(K, tau_i[i], DeltaT, vec_alpha_ij, modA_mat);
   }
   return (G_mat_A_0_to_tau_i);
 }
@@ -278,7 +278,7 @@ arma::mat GmatprodAstotau( int K, arma::vec& vec_alpha_ij, arma::vec& tau,
   int ii = 0; //index de boucle
   mat G_mat_prod_A_s_to_tau = zeros<mat>(K,K*nb_t);
   for (int i=t_ini; i< (int)tau.size(); i++) {
-    G_mat_prod_A_s_to_tau(span(0,(K-1)),span(ii,(ii+K-1))) = ProdA(K, tau[i], t_ini, DeltaT, vec_alpha_ij, modA_mat);
+    G_mat_prod_A_s_to_tau(arma::span(0,(K-1)),arma::span(ii,(ii+K-1))) = ProdA(K, tau[i], t_ini, DeltaT, vec_alpha_ij, modA_mat);
     ii +=K;
   }
   return (G_mat_prod_A_s_to_tau);
@@ -303,7 +303,7 @@ arma::mat tsGmatprodA0totau(int K, arma::vec& vec_alpha_ij, arma::vec& tau, doub
   int T = tau.size();
   mat ts_G_mat_prod_A_0_to_tau = zeros<mat>(K*T,K*T);
   for(int s=0; s<T; s++){
-    ts_G_mat_prod_A_0_to_tau(span(K*s,K*(s+1)-1),span(K*s,K*T-1)) = GmatprodAstotau( K, vec_alpha_ij, tau, s, DeltaT, modA_mat);
+    ts_G_mat_prod_A_0_to_tau(arma::span(K*s,K*(s+1)-1),arma::span(K*s,K*T-1)) = GmatprodAstotau( K, vec_alpha_ij, tau, s, DeltaT, modA_mat);
   }
   return(ts_G_mat_prod_A_0_to_tau);
 }
@@ -455,11 +455,11 @@ arma::mat matNui(int nD, arma::vec& tau_i, double DeltaT, arma::mat& x0i, arma::
       Mu_t = x0i*alpha_mu0;
     }
     else{
-      Mu_t = DeltaT*xi(span(t*nD,(t+1)*nD-1), span(0,n_cols_xi-1))*alpha_mu
-      + G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
+      Mu_t = DeltaT*xi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,n_cols_xi-1))*alpha_mu
+      + G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
     }
     if(t ==(int)tau_i(i)){
-      matNu_i(span(i,i), span(0,nD-1)) = Mu_t.t();
+      matNu_i(arma::span(i,i), arma::span(0,nD-1)) = Mu_t.t();
       i++;
     }
   }
@@ -501,11 +501,11 @@ arma::mat matNui(int nD, arma::vec& tau_i, double DeltaT, arma::mat& x0i, arma::
        Mu_t = x0i*alpha_mu0 + ui;
      }
      else{
-       Mu_t = DeltaT*(xi(span(t*nD,(t+1)*nD-1), span(0,n_cols_xi-1))*alpha_mu + zi(span(t*nD,(t+1)*nD-1), span(0,n_cols_zi-1))*vi)
-       + G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
+       Mu_t = DeltaT*(xi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,n_cols_xi-1))*alpha_mu + zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,n_cols_zi-1))*vi)
+       + G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
      }
      if(t ==(int)tau_i(i)){
-       matNu_i(span(i,i), span(0,nD-1)) = Mu_t.t();
+       matNu_i(arma::span(i,i), arma::span(0,nD-1)) = Mu_t.t();
        i++;
      }
    }
@@ -837,25 +837,25 @@ arma::vec matNui_ui(int nD, arma::vec& tau_i, double DeltaT, arma::mat& x0i, arm
       Mu_t = x0i*alpha_mu0+ ui;
     }else{
       if(randomeffects.size()>nD){
-        Mu_t = DeltaT*(xi(span(t*nD,(t+1)*nD-1), span(0,n_cols_xi-1))*alpha_mu +
-          zi(span(t*nD,(t+1)*nD-1), span(0,n_cols_zi-1))*vi) +
-          G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
+        Mu_t = DeltaT*(xi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,n_cols_xi-1))*alpha_mu +
+          zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,n_cols_zi-1))*vi) +
+          G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
       }else{
-        Mu_t = DeltaT*(xi(span(t*nD,(t+1)*nD-1), span(0,n_cols_xi-1))*alpha_mu) +
-          G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
+        Mu_t = DeltaT*(xi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,n_cols_xi-1))*alpha_mu) +
+          G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),nD*(t-1)+nD-1))*Mu_t;
       }
 
     }
 
     if(ordered){
       if(t ==(int)tau_i(i)){
-        matNu_i(span(i,i), span(0,nD-1)) = Mu_t.t();
+        matNu_i(arma::span(i,i), arma::span(0,nD-1)) = Mu_t.t();
         i++;
       }
     }else{
       for(int ii=0; ii< tau_i.size(); ii++){
         if(t ==(int)tau_i(ii)){
-          matNu_i(span(ii,ii), span(0,nD-1)) = Mu_t.t();
+          matNu_i(arma::span(ii,ii), arma::span(0,nD-1)) = Mu_t.t();
         }
       }
     }
@@ -1395,17 +1395,17 @@ arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i,int delta_i, ar
   nA *= nD;
 
   if(xti1.size()>0)
-    gammaX(span(0,0), span(0,0)) = xti1.t()*param_surv(span(0, xti1.size()-1));
+    gammaX(arma::span(0,0), arma::span(0,0)) = xti1.t()*param_surv(arma::span(0, xti1.size()-1));
 
   if(nE==2 && xti2.size()>0 )
-    gammaX(span(1,1), span(0,0)) = xti2.t()*param_surv(span(xti1.size()+ nA, xti1.size()+ nA+ xti2.size()-1));
-    //gammaX(span(1,1), span(0,0)) = xti2.t()*param_surv(span(xti1.size() + nA, xti1.size() + nA + xti2.size()-1));
+    gammaX(arma::span(1,1), arma::span(0,0)) = xti2.t()*param_surv(arma::span(xti1.size()+ nA, xti1.size()+ nA+ xti2.size()-1));
+    //gammaX(arma::span(1,1), arma::span(0,0)) = xti2.t()*param_surv(arma::span(xti1.size() + nA, xti1.size() + nA + xti2.size()-1));
 
   if(assoc <= 2){// random intercept (0), random slope (1) or both (2)
 
     vec p_surv(nA*nE);
     for(int j=0; j<nE; j++){
-      p_surv(span(j*nA,j*nA+nA-1))=param_surv(span(j*(nA+xti1.size()+xti2.size())+(j+1)%2*xti1.size(),j*(nA+xti1.size()+xti2.size())+(j+1)%2*xti1.size()+nA-1));
+      p_surv(arma::span(j*nA,j*nA+nA-1))=param_surv(arma::span(j*(nA+xti1.size()+xti2.size())+(j+1)%2*xti1.size(),j*(nA+xti1.size()+xti2.size())+(j+1)%2*xti1.size()+nA-1));
     }
 
     
@@ -1417,7 +1417,7 @@ arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i,int delta_i, ar
         for(int d=0; d<nD; d++)
           ui_surv(d)=ui_r(d*nRE+d);
         
-        gammaX(span(j,j), span(0,0)) += ui_surv*p_surv;
+        gammaX(arma::span(j,j), arma::span(0,0)) += ui_surv*p_surv;
         
       }else if(assoc == 1){
         vec ui_surv(nD);
@@ -1425,11 +1425,11 @@ arma::vec f_survival_ui(arma::vec& ui_r, double t_0i, double t_i,int delta_i, ar
         for(int d=0; d<nD; d++)
           ui_surv(d)=ui_r(d*nRE+1);
 
-        gammaX(span(j,j), span(0,0)) += ui_r(1)*param_surv(xti1.size()+ xti2.size()+j);
+        gammaX(arma::span(j,j), arma::span(0,0)) += ui_r(1)*param_surv(xti1.size()+ xti2.size()+j);
         
       }else if(assoc == 2){
 
-        gammaX(span(j,j), span(0,0)) += ui_r.t()*p_surv(span(j*nA,j*nA+nA-1));
+        gammaX(arma::span(j,j), arma::span(0,0)) += ui_r.t()*p_surv(arma::span(j*nA,j*nA+nA-1));
       }
     }
 
@@ -1579,7 +1579,7 @@ arma::mat VecToMat(arma::vec& y, int K, int m_i){
 
   mat mat_y = zeros(m_i,K);
   for(int p = 0; p < m_i; p++){
-    mat_y.row(p) = y(span(p*K, ((p+1)*K-1))).t();
+    mat_y.row(p) = y(arma::span(p*K, ((p+1)*K-1))).t();
   }
 
   return(mat_y);
