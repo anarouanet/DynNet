@@ -17,7 +17,7 @@ using namespace Rcpp;
 using namespace arma;
 using namespace std;
 using std::chrono::steady_clock;
-using arma::span;
+
 //using Eigen::MatrixXd;
 /*
  individual contribution to the log-likelihood
@@ -55,11 +55,11 @@ double Loglikei(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
   //  GrdZi : this matrix contains all model.matrix at each time of tau_i
   for(int t = 0; t<= maxTau_i; t++){
     if(t==0){
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0.e0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0.e0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
     }
     else{
-      GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = (DeltaT*zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-        G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+      GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = (DeltaT*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+        G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
     }
   }
   
@@ -89,30 +89,30 @@ double Loglikei(int K, int nD, arma::mat matrixP, int m_i, arma::vec tau, arma::
         mat phi_0_j_0 = diagmat(vect);
         mat phi_0_k_0 = diagmat(vect);
         if(tau_i(j)>0){
-          phi_0_j_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+          phi_0_j_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
         }
         if(tau_i(k)>0){
-          phi_0_k_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+          phi_0_k_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
         }
         
-        matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+        matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
           ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t() +
-          (phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-          (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-          (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+          (phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+          (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+          (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
           )*matrixP.t())*matH_i_t_k.t();
 
-        //// For simplicty we define GrdZi(span(0*K,(0+1)*K-1), span(0,q-1))) = 0 : as if we spefify
+        //// For simplicty we define GrdZi(arma::span(0*K,(0+1)*K-1), arma::span(0,q-1))) = 0 : as if we spefify
         // model for slope from t_0 but with covariate set to 0
         
         if( k == j ){
           // ##### Fill the diagonal of the matrix VY_i by adding  \Sigma  #########################
-          matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
+          matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
         }
 
         // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
         if(k != j){
-          matVY_i(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
+          matVY_i(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
         }
       }
       p_k += k_i(k); // incrementation of p_k
@@ -227,11 +227,11 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
       for(int t = 0; t<= maxTau_i; t++){
         
         if(t==0){
-          GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0.e0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+          GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0.e0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
         }
         else{
-          GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = (DeltaT*zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-            G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+          GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = (DeltaT*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+            G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
         }
       }
     }
@@ -266,49 +266,49 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
           mat phi_0_j_0 = diagmat(vect);
           mat phi_0_k_0 = diagmat(vect);
           if(tau_i(j)>0){
-            phi_0_j_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+            phi_0_j_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
           }
           if(tau_i(k)>0){
-            phi_0_k_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+            phi_0_k_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
           }
-          // matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+          // matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
           //   ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t() +
-          //   (phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-          //   (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-          //   (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+          //   (phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+          //   (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+          //   (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
           //   )*matrixP.t())*matH_i_t_k.t();
           
-          matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+          matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
             ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t())*matrixP.t())*matH_i_t_k.t();
           
           
           if(q>0){
-            matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
-              ((phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-              (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-              (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+            matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+              ((phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+              (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+              (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
               )*matrixP.t())*matH_i_t_k.t();
           }
           //  matDw       matDw_u
           //  matDw_u.t() matDu
           
           
-          //// For simplicty we define GrdZi(span(0*K,(0+1)*K-1), span(0,q-1))) = 0 : as if we specify
+          //// For simplicty we define GrdZi(arma::span(0*K,(0+1)*K-1), arma::span(0,q-1))) = 0 : as if we specify
           // model for slope from t_0 but with covariate set to 0
           
           if( k == j){
             // ##### Fill the diagonal of the matrix VY_i by adding  \Sigma  #########################
             mat MSM=matH_i_t_j*Sig*matH_i_t_j.t();
-            matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += MSM;
-            //matVY_icheck(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
-            MSigmaM(span(aa, aa +  matH_i_t_j.n_rows -1))= MSM.diag();
+            matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += MSM;
+            //matVY_icheck(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
+            MSigmaM(arma::span(aa, aa +  matH_i_t_j.n_rows -1))= MSM.diag();
             aa = aa + matH_i_t_j.n_rows;
           }
           
           // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
           if(k != j){
-            matVY_i(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
-            //matVY_icheck(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_icheck(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
+            matVY_i(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
+            //matVY_icheck(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_icheck(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
           }
         }
         p_k += k_i(k); // incrementation of p_k
@@ -530,7 +530,7 @@ double Loglikei_GLM(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m
           if(chrono)
             endk0 = std::chrono::system_clock::now();
           
-          vec ParaTransformYk = ParamTransformY(span(kk, (kk+df[k]-1)));
+          vec ParaTransformYk = ParamTransformY(arma::span(kk, (kk+df[k]-1)));
           vec tau_ik = matTik(Ytildi.col(k), tau_i);
           vec Ytildik = YiwoNA(vectorise(Ytildi.col(k)));
           
@@ -886,11 +886,11 @@ double Loglikei_GLM2(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int 
       for(int t = 0; t<= maxTau_i; t++){
         
         if(t==0){
-          GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0.e0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+          GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0.e0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
         }
         else{
-          GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = (DeltaT*zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-            G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+          GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = (DeltaT*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+            G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
         }
       }
     }
@@ -925,49 +925,49 @@ double Loglikei_GLM2(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int 
           mat phi_0_j_0 = diagmat(vect);
           mat phi_0_k_0 = diagmat(vect);
           if(tau_i(j)>0){
-            phi_0_j_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+            phi_0_j_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
           }
           if(tau_i(k)>0){
-            phi_0_k_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+            phi_0_k_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
           }
-          // matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+          // matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
           //   ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t() +
-          //   (phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-          //   (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-          //   (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+          //   (phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+          //   (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+          //   (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
           //   )*matrixP.t())*matH_i_t_k.t();
           
-          matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+          matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
             ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t())*matrixP.t())*matH_i_t_k.t();
           
           
           if(q>0){
-            matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
-              ((phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-              (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-              (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+            matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+              ((phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+              (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+              (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
               )*matrixP.t())*matH_i_t_k.t();
           }
           //  matDw       matDw_u
           //  matDw_u.t() matDu
           
           
-          //// For simplicty we define GrdZi(span(0*K,(0+1)*K-1), span(0,q-1))) = 0 : as if we specify
+          //// For simplicty we define GrdZi(arma::span(0*K,(0+1)*K-1), arma::span(0,q-1))) = 0 : as if we specify
           // model for slope from t_0 but with covariate set to 0
           
           if( k == j){
             // ##### Fill the diagonal of the matrix VY_i by adding  \Sigma  #########################
             mat MSM=matH_i_t_j*Sig*matH_i_t_j.t();
-            matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += MSM;
-            //matVY_icheck(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
-            MSigmaM(span(aa, aa +  matH_i_t_j.n_rows -1))= MSM.diag();
+            matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += MSM;
+            //matVY_icheck(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
+            MSigmaM(arma::span(aa, aa +  matH_i_t_j.n_rows -1))= MSM.diag();
             aa = aa + matH_i_t_j.n_rows;
           }
           
           // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
           if(k != j){
-            matVY_i(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
-            //matVY_icheck(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_icheck(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
+            matVY_i(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
+            //matVY_icheck(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_icheck(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
           }
         }
         p_k += k_i(k); // incrementation of p_k
@@ -1167,7 +1167,7 @@ double Loglikei_GLM2(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int 
           if(chrono)
             endk0 = std::chrono::system_clock::now();
           
-          vec ParaTransformYk = ParamTransformY(span(kk, (kk+df[k]-1)));
+          vec ParaTransformYk = ParamTransformY(arma::span(kk, (kk+df[k]-1)));
           vec tau_ik = matTik(Ytildi.col(k), tau_i);
           vec Ytildik = YiwoNA(vectorise(Ytildi.col(k)));
           
@@ -1534,11 +1534,11 @@ double f_uiYi(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m_i, ar
       for(int t = 0; t<= maxTau_i; t++){
         
         if(t==0){
-          GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = 0.e0*zi(span(t*nD,(t+1)*nD-1), span(0,q-1));
+          GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = 0.e0*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1));
         }
         else{
-          GrdZi(span(t*nD,(t+1)*nD-1), span(0,q-1)) = (DeltaT*zi(span(t*nD,(t+1)*nD-1), span(0,q-1)) +
-            G_mat_A_0_to_tau_i(span(0,nD-1),span(nD*(t-1),t*nD-1))*GrdZi(span((t-1)*nD,t*nD-1), span(0,q-1)));
+          GrdZi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) = (DeltaT*zi(arma::span(t*nD,(t+1)*nD-1), arma::span(0,q-1)) +
+            G_mat_A_0_to_tau_i(arma::span(0,nD-1),arma::span(nD*(t-1),t*nD-1))*GrdZi(arma::span((t-1)*nD,t*nD-1), arma::span(0,q-1)));
         }
       }
     }
@@ -1573,49 +1573,49 @@ double f_uiYi(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m_i, ar
           mat phi_0_j_0 = diagmat(vect);
           mat phi_0_k_0 = diagmat(vect);
           if(tau_i(j)>0){
-            phi_0_j_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
+            phi_0_j_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(j)-1),nD*(tau_i(j)-1)+nD-1));
           }
           if(tau_i(k)>0){
-            phi_0_k_0 = G_mat_prod_A_0_to_tau(span(0,nD-1),span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
+            phi_0_k_0 = G_mat_prod_A_0_to_tau(arma::span(0,nD-1),arma::span(nD*(tau_i(k)-1),nD*(tau_i(k)-1)+nD-1));
           }
-          // matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+          // matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
           //   ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t() +
-          //   (phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-          //   (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-          //   (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+          //   (phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+          //   (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+          //   (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
           //   )*matrixP.t())*matH_i_t_k.t();
           
-          matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+          matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
             ((phi_0_j_0*z0i)*matDw* (z0i*phi_0_k_0).t())*matrixP.t())*matH_i_t_k.t();
           
           
           if(q>0){
-            matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
-              ((phi_0_j_0*z0i)*matDw_u*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t() +
-              (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
-              (GrdZi(span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), span(0,q-1)))*matDu*(GrdZi(span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), span(0,q-1))).t()
+            matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*( matrixP*
+              ((phi_0_j_0*z0i)*matDw_u*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t() +
+              (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*phi_0_k_0).t() +
+              (GrdZi(arma::span(tau_i(j)*nD,(tau_i(j)+1)*nD-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau_i(k)*nD,(tau_i(k)+1)*nD-1), arma::span(0,q-1))).t()
               )*matrixP.t())*matH_i_t_k.t();
           }
           //  matDw       matDw_u
           //  matDw_u.t() matDu
           
           
-          //// For simplicty we define GrdZi(span(0*K,(0+1)*K-1), span(0,q-1))) = 0 : as if we specify
+          //// For simplicty we define GrdZi(arma::span(0*K,(0+1)*K-1), arma::span(0,q-1))) = 0 : as if we specify
           // model for slope from t_0 but with covariate set to 0
           
           if( k == j){
             // ##### Fill the diagonal of the matrix VY_i by adding  \Sigma  #########################
             mat MSM=matH_i_t_j*Sig*matH_i_t_j.t();
-            matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += MSM;
-            //matVY_icheck(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
-            MSigmaM(span(aa, aa +  matH_i_t_j.n_rows -1))= MSM.diag();
+            matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += MSM;
+            //matVY_icheck(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))) += matH_i_t_j*Sig*matH_i_t_j.t();
+            MSigmaM(arma::span(aa, aa +  matH_i_t_j.n_rows -1))= MSM.diag();
             aa = aa + matH_i_t_j.n_rows;
           }
           
           // ###### VY_i is a symetric matrix; so we fill lower triangular matri by transpose the upper triangular part #########
           if(k != j){
-            matVY_i(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_i(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
-            //matVY_icheck(span((p_k), (p_k+k_i(k)-1)), span(p_j,(p_j+k_i(j)-1))) = matVY_icheck(span(p_j,(p_j+k_i(j)-1)), span((p_k), (p_k+k_i(k)-1))).t();
+            matVY_i(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_i(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
+            //matVY_icheck(arma::span((p_k), (p_k+k_i(k)-1)), arma::span(p_j,(p_j+k_i(j)-1))) = matVY_icheck(arma::span(p_j,(p_j+k_i(j)-1)), arma::span((p_k), (p_k+k_i(k)-1))).t();
           }
         }
         p_k += k_i(k); // incrementation of p_k
@@ -1836,7 +1836,7 @@ double f_uiYi(int K, int nD, arma::mat& matrixP, arma::vec& mapping, int m_i, ar
           if(chrono)
             endk0 = std::chrono::system_clock::now();
           
-          vec ParaTransformYk = ParamTransformY(span(kk, (kk+df[k]-1)));
+          vec ParaTransformYk = ParamTransformY(arma::span(kk, (kk+df[k]-1)));
           vec tau_ik = matTik(Ytildi.col(k), tau_i);
           vec Ytildik = YiwoNA(vectorise(Ytildi.col(k)));
           
@@ -2249,19 +2249,19 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
   
   //Identification of groups of parameters
   int ipara =0;
-  colvec alpha_mu0 = paras(span(ipara,ipara+ncol_x0-1));
+  colvec alpha_mu0 = paras(arma::span(ipara,ipara+ncol_x0-1));
   ipara += ncol_x0;
-  colvec alpha_mu = paras(span(ipara,ipara+ncol_x-1));
+  colvec alpha_mu = paras(arma::span(ipara,ipara+ncol_x-1));
   ipara += ncol_x;
-  colvec alpha_D = paras(span(ipara,ipara + nb_paraD-1));
+  colvec alpha_D = paras(arma::span(ipara,ipara + nb_paraD-1));
   ipara += nb_paraD;
-  vec vec_alpha_ij = paras(span(ipara,ipara+L*nD*nD-1));
+  vec vec_alpha_ij = paras(arma::span(ipara,ipara+L*nD*nD-1));
   ipara += L*nD*nD;
   vec paraB = zeros(nD);
-  vec paraSig = paras(span(ipara,ipara+K-1));
+  vec paraSig = paras(arma::span(ipara,ipara+K-1));
   ipara += K;
   int nbParaTransformY = Mod_MatrixY.n_cols;
-  colvec ParaTransformY = paras(span(ipara,ipara+nbParaTransformY-1));
+  colvec ParaTransformY = paras(arma::span(ipara,ipara+nbParaTransformY-1));
   ipara += nbParaTransformY;
   
   int nq_s=0; // number parameters for baseline function
@@ -2289,12 +2289,12 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
     param_basehaz = zeros<vec>(nq_s*nE);
 
     for(int k=0; k<nE;k++){
-      param_basehaz(span(k*nq_s, (nq_s-1)*(1-k) + (nq_s*nE-1)*k)) = paras(span(ipara,ipara + nq_s -1));
+      param_basehaz(arma::span(k*nq_s, (nq_s-1)*(1-k) + (nq_s*nE-1)*k)) = paras(arma::span(ipara,ipara + nq_s -1));
       ipara += nq_s;
-      param_surv(span(k*np_surv0(0), (np_surv0(0)-1)*(1-k) + (sum(np_surv0)-1)*k)) = paras(span(ipara,ipara + np_surv0(k)-1));
+      param_surv(arma::span(k*np_surv0(0), (np_surv0(0)-1)*(1-k) + (sum(np_surv0)-1)*k)) = paras(arma::span(ipara,ipara + np_surv0(k)-1));
 
       if(sum(nYsurv)>0)
-        param_surv_intY(span(k*(np_surv(0)-np_surv0(0)), ((np_surv(0)-np_surv0(0))-1)*(1-k) + (sum(np_surv-np_surv0)-1)*k)) = paras(span(ipara+np_surv0(k),ipara + np_surv(k)-1));
+        param_surv_intY(arma::span(k*(np_surv(0)-np_surv0(0)), ((np_surv(0)-np_surv0(0))-1)*(1-k) + (sum(np_surv-np_surv0)-1)*k)) = paras(arma::span(ipara+np_surv0(k),ipara + np_surv(k)-1));
 
       ipara += np_surv(k);
     }
@@ -2367,13 +2367,13 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
   }
        
   int n_cols_matD = matD.n_cols;
-  Mat<double> matDw = matD(span(0,nD-1),span(0,nD-1));
+  Mat<double> matDw = matD(arma::span(0,nD-1),arma::span(0,nD-1));
   Mat<double> matDw_u;
   Mat<double> matDu;
   
   if(n_cols_matD>nD){
-    matDw_u = matD(span(0,nD-1),span(nD,n_cols_matD-1));
-    matDu = (matD(span(nD,n_cols_matD-1),span(nD,n_cols_matD-1)));
+    matDw_u = matD(arma::span(0,nD-1),arma::span(nD,n_cols_matD-1));
+    matDu = (matD(arma::span(nD,n_cols_matD-1),arma::span(nD,n_cols_matD-1)));
   }else{
     matDw_u = zeros(1,1);
     matDu = zeros(1,1);
@@ -2435,10 +2435,10 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
 
   for(int k=0; k<K;k++){
     if(if_link[k] == 1){ //splines
-      ParamTransformY(span(kk, kk+df[k]-1)) = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+      ParamTransformY(arma::span(kk, kk+df[k]-1)) = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
       ParamTransformY[kk] = log(ParamTransformY[kk]);
-      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(span(kk, kk+df[k]-1));
-      YtildPrim.col(k) = Mod_MatrixYprim.cols(kkp, (kkp+df[k]-2))*ParamTransformY(span(kk+1, kk+df[k]-1));
+      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(arma::span(kk, kk+df[k]-1));
+      YtildPrim.col(k) = Mod_MatrixYprim.cols(kkp, (kkp+df[k]-2))*ParamTransformY(arma::span(kk+1, kk+df[k]-1));
       kk += df[k];
       kkp += df[k]-1;
       
@@ -2456,13 +2456,13 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
       kk += df[k];
       kkp += df[k]-1;
     }else{ // linear
-      ParamTransformY(span(kk, (kk+df[k]-1))) = ParaTransformY(span(kk, (kk+df[k]-1)));
+      ParamTransformY(arma::span(kk, (kk+df[k]-1))) = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
       ParamTransformY[kk] = - ParamTransformY[kk]/ParamTransformY[kk+1];
       ParamTransformY[kk+1] = 1.e0/ParamTransformY[kk+1];
 
-      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(span(kk, (kk+df[k]-1)));
+      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(arma::span(kk, (kk+df[k]-1)));
       YtildPrim.col(k) = ParamTransformY[kk+1]*Mod_MatrixYprim.cols(kkp, (kkp+df[k]-2));
-      //cout << " paramTransf "<<ParaTransformY(span(kk, (kk+df[k]-1))).t()<<endl;
+      //cout << " paramTransf "<<ParaTransformY(arma::span(kk, (kk+df[k]-1))).t()<<endl;
       //cout << " Yprim "<<1<<endl;
       //cout << " YtildPrim "<<0.9174<<endl;
       kk += df[k];
@@ -2482,11 +2482,11 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
     //if(n%200==0)
     // printf("\n %d \n",(n+1));
     //Creation of matrix G_mat_prod_A_0_to_tau that contains all products  A(j) from t_i a Tmax: t_i \in 0, Tmax
-    mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-    mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
+    mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+    mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
     //if( std::all_of(if_link.begin(), if_link.end(), compFun2) ){
-    //mat G_mat_A_0_to_t_i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_ti(span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_ti(span(n*15,((n+1)*15-1)), span(0,(L-1))));
-    //mat G_mat_A_0_to_t_0i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_t0i(span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_t0i(span(n*15,((n+1)*15-1)), span(0,(L-1))));
+    //mat G_mat_A_0_to_t_i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_ti(arma::span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_ti(arma::span(n*15,((n+1)*15-1)), arma::span(0,(L-1))));
+    //mat G_mat_A_0_to_t_0i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_t0i(arma::span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_t0i(arma::span(n*15,((n+1)*15-1)), arma::span(0,(L-1))));
     
     double t_i=0.0; 
     double t_0i=0.0; 
@@ -2511,21 +2511,21 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
         }
       }
 
-      //modA_mat_predGK_ti = modA_mat_predGK_t(span(n*15, (n+1)*15-1), span(0, modA_mat_predGK_t.n_cols-1));//zeros(15, modA_mat_predGK_t.n_cols);
-      //modA_mat_predGK_t0i = modA_mat_predGK_t0(span(n*15, (n+1)*15-1), span(0, modA_mat_predGK_t0.n_cols-1));//zeros(15, modA_mat_predGK_t0.n_cols);
+      //modA_mat_predGK_ti = modA_mat_predGK_t(arma::span(n*15, (n+1)*15-1), arma::span(0, modA_mat_predGK_t.n_cols-1));//zeros(15, modA_mat_predGK_t.n_cols);
+      //modA_mat_predGK_t0i = modA_mat_predGK_t0(arma::span(n*15, (n+1)*15-1), arma::span(0, modA_mat_predGK_t0.n_cols-1));//zeros(15, modA_mat_predGK_t0.n_cols);
       
       if(sum(nYsurv)>0){
-        xti1_intY = data_surv_intY(span(n,n), span(0,nYsurv(0)-1));
+        xti1_intY = data_surv_intY(arma::span(n,n), arma::span(0,nYsurv(0)-1));
         if(nE==2){
-          xti2_intY = data_surv_intY(span(n,n), span(nYsurv(0), sum(nYsurv)-1));
+          xti2_intY = data_surv_intY(arma::span(n,n), arma::span(nYsurv(0), sum(nYsurv)-1));
         }
       }
     }
 
-     // double out0 = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-     //                     YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-     //                     z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-     //                     z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+     // double out0 = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+     //                     YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+     //                     z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+     //                     z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
      //                     matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT);
     //loglik0 += out0;
     //}
@@ -2535,10 +2535,10 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
     double out1 = 0;
     if(ii>N || n==(ii-1)){
 
-      out1= Loglikei_GLM(K, nD, matrixP, mapping, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-                           YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-                           z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-                           z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+      out1= Loglikei_GLM(K, nD, matrixP, mapping, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+                           YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+                           z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+                           z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
                            matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT, ParamTransformY, df, if_link, zitr, ide, paras_k,
                            t_0i, t_i, delta_i, xti1, xti2, xti1_intY, xti2_intY, basehaz, knots_surv, survival, param_surv, param_surv_intY, param_basehaz, assoc, truncation,
                            sequence, type_int, ind_seq_i, MCnr, n, nE, add_diag_varcov, q);   
@@ -2547,10 +2547,10 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
     }
 
      
-    // double out2 =  Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-    //                     YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-    //                     z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-    //                     z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+    // double out2 =  Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+    //                     YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+    //                     z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+    //                     z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
     //                     matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT);
     // loglik2 += out2;
     //cout << "n:"<< n<< " loglik "<<  out1<<endl;
@@ -2563,12 +2563,12 @@ double Loglik(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec& 
   }
   
   // int n = 0;
-  // mat G_mat_prod_A_0_to_tau = tsGmatprodA0totau(K, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-  // mat G_mat_A_0_to_tau_i = GmatA0totaui(K, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-  // double  loglik = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-  //                         YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-  //                         z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-  //                         z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+  // mat G_mat_prod_A_0_to_tau = tsGmatprodA0totau(K, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+  // mat G_mat_A_0_to_tau_i = GmatA0totaui(K, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+  // double  loglik = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+  //                         YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+  //                         z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+  //                         z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
   //                         matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT);
   
   return(loglik);
@@ -2674,19 +2674,19 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
   
   //Identification of groups of parameters
   int ipara =0;
-  colvec alpha_mu0 = paras(span(ipara,ipara+ncol_x0-1));
+  colvec alpha_mu0 = paras(arma::span(ipara,ipara+ncol_x0-1));
   ipara += ncol_x0;
-  colvec alpha_mu = paras(span(ipara,ipara+ncol_x-1));
+  colvec alpha_mu = paras(arma::span(ipara,ipara+ncol_x-1));
   ipara += ncol_x;
-  colvec alpha_D = paras(span(ipara,ipara + nb_paraD-1));
+  colvec alpha_D = paras(arma::span(ipara,ipara + nb_paraD-1));
   ipara += nb_paraD;
-  vec vec_alpha_ij = paras(span(ipara,ipara+L*nD*nD-1));
+  vec vec_alpha_ij = paras(arma::span(ipara,ipara+L*nD*nD-1));
   ipara += L*nD*nD;
   vec paraB = zeros(nD);
-  vec paraSig = paras(span(ipara,ipara+K-1));
+  vec paraSig = paras(arma::span(ipara,ipara+K-1));
   ipara += K;
   int nbParaTransformY = Mod_MatrixY.n_cols;
-  colvec ParaTransformY = paras(span(ipara,ipara+nbParaTransformY-1));
+  colvec ParaTransformY = paras(arma::span(ipara,ipara+nbParaTransformY-1));
   ipara += nbParaTransformY;
   
   int nq_s=0; // number parameters for baseline function
@@ -2714,12 +2714,12 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
     param_basehaz = zeros<vec>(nq_s*nE);
     
     for(int k=0; k<nE;k++){
-      param_basehaz(span(k*nq_s, (nq_s-1)*(1-k) + (nq_s*nE-1)*k)) = paras(span(ipara,ipara + nq_s -1));
+      param_basehaz(arma::span(k*nq_s, (nq_s-1)*(1-k) + (nq_s*nE-1)*k)) = paras(arma::span(ipara,ipara + nq_s -1));
       ipara += nq_s;
-      param_surv(span(k*np_surv0(0), (np_surv0(0)-1)*(1-k) + (sum(np_surv0)-1)*k)) = paras(span(ipara,ipara + np_surv0(k)-1));
+      param_surv(arma::span(k*np_surv0(0), (np_surv0(0)-1)*(1-k) + (sum(np_surv0)-1)*k)) = paras(arma::span(ipara,ipara + np_surv0(k)-1));
       
       if(sum(nYsurv)>0)
-        param_surv_intY(span(k*(np_surv(0)-np_surv0(0)), ((np_surv(0)-np_surv0(0))-1)*(1-k) + (sum(np_surv-np_surv0)-1)*k)) = paras(span(ipara+np_surv0(k),ipara + np_surv(k)-1));
+        param_surv_intY(arma::span(k*(np_surv(0)-np_surv0(0)), ((np_surv(0)-np_surv0(0))-1)*(1-k) + (sum(np_surv-np_surv0)-1)*k)) = paras(arma::span(ipara+np_surv0(k),ipara + np_surv(k)-1));
       
       ipara += np_surv(k);
     }
@@ -2792,13 +2792,13 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
   }
   
   int n_cols_matD = matD.n_cols;
-  Mat<double> matDw = matD(span(0,nD-1),span(0,nD-1));
+  Mat<double> matDw = matD(arma::span(0,nD-1),arma::span(0,nD-1));
   Mat<double> matDw_u;
   Mat<double> matDu;
   
   if(n_cols_matD>nD){
-    matDw_u = matD(span(0,nD-1),span(nD,n_cols_matD-1));
-    matDu = (matD(span(nD,n_cols_matD-1),span(nD,n_cols_matD-1)));
+    matDw_u = matD(arma::span(0,nD-1),arma::span(nD,n_cols_matD-1));
+    matDu = (matD(arma::span(nD,n_cols_matD-1),arma::span(nD,n_cols_matD-1)));
   }else{
     matDw_u = zeros(1,1);
     matDu = zeros(1,1);
@@ -2860,10 +2860,10 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
   
   for(int k=0; k<K;k++){
     if(if_link[k] == 1){ //splines
-      ParamTransformY(span(kk, kk+df[k]-1)) = exp(ParaTransformY(span(kk, (kk+df[k]-1))));
+      ParamTransformY(arma::span(kk, kk+df[k]-1)) = exp(ParaTransformY(arma::span(kk, (kk+df[k]-1))));
       ParamTransformY[kk] = log(ParamTransformY[kk]);
-      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(span(kk, kk+df[k]-1));
-      YtildPrim.col(k) = Mod_MatrixYprim.cols(kkp, (kkp+df[k]-2))*ParamTransformY(span(kk+1, kk+df[k]-1));
+      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(arma::span(kk, kk+df[k]-1));
+      YtildPrim.col(k) = Mod_MatrixYprim.cols(kkp, (kkp+df[k]-2))*ParamTransformY(arma::span(kk+1, kk+df[k]-1));
       kk += df[k];
       kkp += df[k]-1;
       
@@ -2881,13 +2881,13 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
       kk += df[k];
       kkp += df[k]-1;
     }else{ // linear
-      ParamTransformY(span(kk, (kk+df[k]-1))) = ParaTransformY(span(kk, (kk+df[k]-1)));
+      ParamTransformY(arma::span(kk, (kk+df[k]-1))) = ParaTransformY(arma::span(kk, (kk+df[k]-1)));
       ParamTransformY[kk] = - ParamTransformY[kk]/ParamTransformY[kk+1];
       ParamTransformY[kk+1] = 1.e0/ParamTransformY[kk+1];
       
-      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(span(kk, (kk+df[k]-1)));
+      Ytild.col(k) = Mod_MatrixY.cols(kk, (kk+df[k]-1))*ParamTransformY(arma::span(kk, (kk+df[k]-1)));
       YtildPrim.col(k) = ParamTransformY[kk+1]*Mod_MatrixYprim.cols(kkp, (kkp+df[k]-2));
-      //cout << " paramTransf "<<ParaTransformY(span(kk, (kk+df[k]-1))).t()<<endl;
+      //cout << " paramTransf "<<ParaTransformY(arma::span(kk, (kk+df[k]-1))).t()<<endl;
       //cout << " Yprim "<<1<<endl;
       //cout << " YtildPrim "<<0.9174<<endl;
       kk += df[k];
@@ -2907,11 +2907,11 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
     //if(n%200==0)
     // printf("\n %d \n",(n+1));
     //Creation of matrix G_mat_prod_A_0_to_tau that contains all products  A(j) from t_i a Tmax: t_i \in 0, Tmax
-    mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-    mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
+    mat G_mat_prod_A_0_to_tau = GmatprodAstotau(nD, vec_alpha_ij, tau, 0, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+    mat G_mat_A_0_to_tau_i = GmatA0totaui(nD, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
     //if( std::all_of(if_link.begin(), if_link.end(), compFun2) ){
-    //mat G_mat_A_0_to_t_i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_ti(span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_ti(span(n*15,((n+1)*15-1)), span(0,(L-1))));
-    //mat G_mat_A_0_to_t_0i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_t0i(span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_t0i(span(n*15,((n+1)*15-1)), span(0,(L-1))));
+    //mat G_mat_A_0_to_t_i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_ti(arma::span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_ti(arma::span(n*15,((n+1)*15-1)), arma::span(0,(L-1))));
+    //mat G_mat_A_0_to_t_0i = GmatA0totaui(nD, vec_alpha_ij, deltaT_ptGK_t0i(arma::span(n*15, (n+1)*15-1), DeltaT, modA_mat_predGK_t0i(arma::span(n*15,((n+1)*15-1)), arma::span(0,(L-1))));
     
     double t_i=0.0; 
     double t_0i=0.0; 
@@ -2936,21 +2936,21 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
         }
       }
       
-      //modA_mat_predGK_ti = modA_mat_predGK_t(span(n*15, (n+1)*15-1), span(0, modA_mat_predGK_t.n_cols-1));//zeros(15, modA_mat_predGK_t.n_cols);
-      //modA_mat_predGK_t0i = modA_mat_predGK_t0(span(n*15, (n+1)*15-1), span(0, modA_mat_predGK_t0.n_cols-1));//zeros(15, modA_mat_predGK_t0.n_cols);
+      //modA_mat_predGK_ti = modA_mat_predGK_t(arma::span(n*15, (n+1)*15-1), arma::span(0, modA_mat_predGK_t.n_cols-1));//zeros(15, modA_mat_predGK_t.n_cols);
+      //modA_mat_predGK_t0i = modA_mat_predGK_t0(arma::span(n*15, (n+1)*15-1), arma::span(0, modA_mat_predGK_t0.n_cols-1));//zeros(15, modA_mat_predGK_t0.n_cols);
       
       if(sum(nYsurv)>0){
-        xti1_intY = data_surv_intY(span(n,n), span(0,nYsurv(0)-1));
+        xti1_intY = data_surv_intY(arma::span(n,n), arma::span(0,nYsurv(0)-1));
         if(nE==2){
-          xti2_intY = data_surv_intY(span(n,n), span(nYsurv(0), sum(nYsurv)-1));
+          xti2_intY = data_surv_intY(arma::span(n,n), arma::span(nYsurv(0), sum(nYsurv)-1));
         }
       }
     }
     
-    // double out0 = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-    //                     YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-    //                     z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-    //                     z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+    // double out0 = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+    //                     YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+    //                     z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+    //                     z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
     //                     matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT);
     //loglik0 += out0;
     //}
@@ -2960,10 +2960,10 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
     double out1 = 0;
     if(ii>N || n==(ii-1)){
 
-        out1= Loglikei_GLM2(K, nD, matrixP, mapping, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-                           YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-                           z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-                           z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+        out1= Loglikei_GLM2(K, nD, matrixP, mapping, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+                           YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+                           z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+                           z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
                            matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT, ParamTransformY, df, if_link, zitr, ide, paras_k,
                            t_0i, t_i, delta_i, xti1, xti2, xti1_intY, xti2_intY, basehaz, knots_surv, survival, param_surv, param_surv_intY, param_basehaz, assoc, truncation,
                            sequence, type_int, ind_seq_i, MCnr, n, nE, add_diag_varcov, q, ui);   
@@ -2975,10 +2975,10 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
     }
     
     
-    // double out2 =  Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-    //                     YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-    //                     z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-    //                     z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+    // double out2 =  Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+    //                     YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+    //                     z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+    //                     z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
     //                     matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT);
     // loglik2 += out2;
     //cout << "n:"<< n<< " loglik "<<  out1<<endl;
@@ -2991,12 +2991,12 @@ double Loglik2(int K, int nD, arma::vec& mapping, arma::vec& paraOpt, arma::vec&
   }
   
   // int n = 0;
-  // mat G_mat_prod_A_0_to_tau = tsGmatprodA0totau(K, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-  // mat G_mat_A_0_to_tau_i = GmatA0totaui(K, vec_alpha_ij, tau, DeltaT, modA_mat(span(n*m,((n+1)*m-1)), span(0,(L-1))));
-  // double  loglik = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(span(p,(p+m_is(n)-1))), Ytild(span(p,(p+m_is(n)-1)), span(0,(K-1))),
-  //                         YtildPrim(span(p,(p+m_is(n)-1)), span(0,(K-1))), x0(span(n*nD,(n+1)*nD-1), span(0,(ncol_x0-1))),
-  //                         z0(span(n*nD,(n+1)*nD-1), span(0,(ncol_z0-1))), x(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_x-1))),
-  //                         z(span(n*nD*m,((n+1)*nD*m-1)), span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
+  // mat G_mat_prod_A_0_to_tau = tsGmatprodA0totau(K, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+  // mat G_mat_A_0_to_tau_i = GmatA0totaui(K, vec_alpha_ij, tau, DeltaT, modA_mat(arma::span(n*m,((n+1)*m-1)), arma::span(0,(L-1))));
+  // double  loglik = Loglikei(K, nD, matrixP, m_is(n), tau, tau_is(arma::span(p,(p+m_is(n)-1))), Ytild(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))),
+  //                         YtildPrim(arma::span(p,(p+m_is(n)-1)), arma::span(0,(K-1))), x0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_x0-1))),
+  //                         z0(arma::span(n*nD,(n+1)*nD-1), arma::span(0,(ncol_z0-1))), x(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_x-1))),
+  //                         z(arma::span(n*nD*m,((n+1)*nD*m-1)), arma::span(0,(ncol_z-1))),alpha_mu0, alpha_mu, matDw, matDw_u, matDu,
   //                         matB, Sig, G_mat_A_0_to_tau_i, G_mat_prod_A_0_to_tau,  DeltaT);
   
   return(loglik);
