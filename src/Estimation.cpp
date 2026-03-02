@@ -17,6 +17,7 @@ using namespace Rcpp;
 using namespace arma;
 using namespace std;
 using std::chrono::steady_clock;
+using arma::span;
 //using Eigen::MatrixXd;
 /*
  individual contribution to the log-likelihood
