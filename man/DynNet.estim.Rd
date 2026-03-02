@@ -13,7 +13,7 @@ DynNet.estim(
   cholesky = FALSE,
   DeltaT = 1,
   MCnr = NULL,
-  MCnr2 = NULL,
+  MCnr2 = 0,
   nmes = NULL,
   data_surv = NULL,
   paras,

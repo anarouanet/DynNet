@@ -105,20 +105,23 @@
 #' @param TimeDiscretization a boolean indicating if the initial time has to be discretized (FALSE by default). When setting to FALSE, it allows to avoid discretization when running univariate model during parameter initialization.
 #' @param predict_ui boolean indicating if bayesian estimates of random effects should be computed (FALSE by default)
 #' @param  \dots other optional arguments
-#' @details The vector of initial values paras.ini includes: the regression parameters on the initial level;
-#' the regression parameters on the slope; 
-#' the lower triangular matrix of the cholesky or the correlation specification;
-#' the parameters of the transition matrix;
-#' the variances of the marker-specific measurement errors;
-#' the parameters of the transformation function;
-#' the parameters for the baseline hazard function for transition 1;
-#' the regression parameters in the survival model, not in interaction with dynamics of the latent process(es), for transition 1;
-#' the association parameters in the survival model, between the time-to-event(s) and the dynamics of the latent process(es), for transition 1;
-#' the interaction parameters in the survival model between covariates and the dynamics of the latent process(es), for transition 1;
-#' the parameters for the baseline hazard function for transition 2;
-#' the regression parameters in the survival model, not in interactions with the dynamics of the latent process(es), for transition 2;
-#' the association parameters in the survival model, between the time-to-event(s) and the dynamics of the latent process(es), for transition 2;
-#' the interaction parameters in the survival model between covariates and the dynamics of the latent process(es), or transition 2.
+#' @details The vector of initial values \code{paras.ini} includes: 
+#' \itemize{
+#' \item the regression parameters on the initial level;
+#' \item the regression parameters on the slope; 
+#' \item the lower triangular matrix of the cholesky or the correlation specification;
+#' \item the parameters of the transition matrix;
+#' \item the variances of the marker-specific measurement errors;
+#' \item the parameters of the transformation function;
+#' \item the parameters for the baseline hazard function for transition 1;
+#' \item the regression parameters in the survival model, not in interaction with dynamics of the latent process(es), for transition 1;
+#' \item the association parameters in the survival model, between the time-to-event(s) and the dynamics of the latent process(es), for transition 1;
+#' \item the interaction parameters in the survival model between covariates and the dynamics of the latent process(es), for transition 1;
+#' \item the parameters for the baseline hazard function for transition 2;
+#' \item the regression parameters in the survival model, not in interactions with the dynamics of the latent process(es), for transition 2;
+#' \item the association parameters in the survival model, between the time-to-event(s) and the dynamics of the latent process(es), for transition 2;
+#' \item the interaction parameters in the survival model between covariates and the dynamics of the latent process(es), or transition 2.
+#' }
 #' @return ---
 #' @export
 #' @importFrom splines bs
@@ -325,9 +328,9 @@ DynNet <- function(structural.model, measurement.model, parameters,
     option$MCnr_pred <- 0
   }
   
-  if(is.null(option$MCnr2)){#number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982). Not used here as this doesn't work
+  #if(is.null(option$MCnr2)){#number Quasi-Monte Carlo replicates for the integration over random effects when computing the variances at the optimum, using Louis' principle (1982). Not used here as this doesn't work
       option$MCnr2 <- 0
-  }
+  #}
 
   #if(is.null(option$type_int)){
   #  option$type_int <- "montecarlo"

@@ -25,7 +25,7 @@
 #' @return DynNet object
 #' 
 #' @import marqLevAlg randtoolbox foreach doParallel
-DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky = FALSE, DeltaT=1.0, MCnr = NULL, MCnr2=NULL, nmes = NULL, data_surv = NULL, paras, 
+DynNet.estim <- function(K, nD, mapping.to.LP, data, if_link = if_link, cholesky = FALSE, DeltaT=1.0, MCnr = NULL, MCnr2=0, nmes = NULL, data_surv = NULL, paras, 
                           maxiter = 500, nproc = 1, epsa =0.0001, epsb = 0.0001,epsd= 0.001, print.info = FALSE, predict_ui = FALSE){
   cl <- match.call()
   #  non parall Optimisation 
