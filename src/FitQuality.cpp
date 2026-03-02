@@ -30,11 +30,11 @@ arma::mat G_mat_prod_A_0_to_tau,  double DeltaT){
   // ##### computering of GrdZi ####################################
   for(int t = 0; t<= maxTau; t++){
     if(t==0){
-      GrdZi(span(t*K,(t+1)*K-1), span(0,q-1)) = 0*zi(span(t*K,(t+1)*K-1), span(0,q-1));
+      GrdZi(arma::span(t*K,(t+1)*K-1), arma::span(0,q-1)) = 0*zi(arma::span(t*K,(t+1)*K-1), arma::span(0,q-1));
     }
     else{
-      GrdZi(span(t*K,(t+1)*K-1), span(0,q-1)) = DeltaT*(zi(span(t*K,(t+1)*K-1), span(0,q-1)) +
-      G_mat_A_0_to_tau_i(span(0,K-1),span(K*(t-1),t*K-1))*GrdZi(span((t-1)*K,t*K-1), span(0,q-1)));
+      GrdZi(arma::span(t*K,(t+1)*K-1), arma::span(0,q-1)) = DeltaT*(zi(arma::span(t*K,(t+1)*K-1), arma::span(0,q-1)) +
+      G_mat_A_0_to_tau_i(arma::span(0,K-1),arma::span(K*(t-1),t*K-1))*GrdZi(arma::span((t-1)*K,t*K-1), arma::span(0,q-1)));
     }
   }  
   // Computing of matVX_i=================================================================================
@@ -47,19 +47,19 @@ arma::mat G_mat_prod_A_0_to_tau,  double DeltaT){
       mat prodA_0_to_t_j_1 = diagmat(vect);
       mat prodA_0_to_t_k_1 = diagmat(vect);
       if(tau(j)>0){
-        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(span(0,K-1),span(K*(tau(j)-1),K*(tau(j)-1)+K-1));
+        prodA_0_to_t_j_1 = G_mat_prod_A_0_to_tau(arma::span(0,K-1),arma::span(K*(tau(j)-1),K*(tau(j)-1)+K-1));
       }
       if(tau(k)>0){
-        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(span(0,K-1),span(K*(tau(k)-1),K*(tau(k)-1)+K-1));
+        prodA_0_to_t_k_1 = G_mat_prod_A_0_to_tau(arma::span(0,K-1),arma::span(K*(tau(k)-1),K*(tau(k)-1)+K-1));
       }
-      matVX_i(span(p_j,(p_j+K-1)), span((p_k), (p_k+K-1))) +=
+      matVX_i(arma::span(p_j,(p_j+K-1)), arma::span((p_k), (p_k+K-1))) +=
       pow(DeltaT, (tau(j)+tau(k)))*(prodA_0_to_t_j_1*z0i)*matDw*(z0i*prodA_0_to_t_k_1).t() + 
-      pow(DeltaT, tau(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(span(tau(k)*K,(tau(k)+1)*K-1), span(0,q-1))).t() +
-      pow(DeltaT, tau(k))*(GrdZi(span(tau(j)*K,(tau(j)+1)*K-1), span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
-      (GrdZi(span(tau(j)*K,(tau(j)+1)*K-1), span(0,q-1)))*matDu*(GrdZi(span(tau(k)*K,(tau(k)+1)*K-1), span(0,q-1))).t();
+      pow(DeltaT, tau(j))*(prodA_0_to_t_j_1*z0i)*matDw_u*(GrdZi(arma::span(tau(k)*K,(tau(k)+1)*K-1), arma::span(0,q-1))).t() +
+      pow(DeltaT, tau(k))*(GrdZi(arma::span(tau(j)*K,(tau(j)+1)*K-1), arma::span(0,q-1)))*matDw_u.t()*(z0i*prodA_0_to_t_k_1).t() +
+      (GrdZi(arma::span(tau(j)*K,(tau(j)+1)*K-1), arma::span(0,q-1)))*matDu*(GrdZi(arma::span(tau(k)*K,(tau(k)+1)*K-1), arma::span(0,q-1))).t();
       //remplissage de la partie inf?reure de la matrice puisque matVX_i est sym?trique====
       if(p_j != p_k){
-        matVX_i(span(p_k, (p_k+K-1)), span(p_j,(p_j+K-1))) = matVX_i(span(p_j,(p_j+K-1)), span(p_k, (p_k+K-1))).t();
+        matVX_i(arma::span(p_k, (p_k+K-1)), arma::span(p_j,(p_j+K-1))) = matVX_i(arma::span(p_j,(p_j+K-1)), arma::span(p_k, (p_k+K-1))).t();
       }
       p_k += K; // incr?mentation de p_k
     }
@@ -106,24 +106,24 @@ arma::vec tau, arma::mat modA_mat_i, double DeltaT){
   
   //Identification of groups of parameters
   int ipara =0;
-  colvec alpha_mu0 = paras(span(ipara,ipara+ncol_x0-1));
+  colvec alpha_mu0 = paras(arma::span(ipara,ipara+ncol_x0-1));
   ipara += ncol_x0;
-  colvec alpha_mu = DeltaT*paras(span(ipara,ipara+ncol_x-1));
+  colvec alpha_mu = DeltaT*paras(arma::span(ipara,ipara+ncol_x-1));
   ipara += ncol_x;
-  colvec alpha_D = paras(span(ipara,ipara + nb_paraD-1));
+  colvec alpha_D = paras(arma::span(ipara,ipara + nb_paraD-1));
   ipara += nb_paraD;
-  vec vec_alpha_ij = DeltaT*paras(span(ipara,ipara+L*K*K-1));
+  vec vec_alpha_ij = DeltaT*paras(arma::span(ipara,ipara+L*K*K-1));
   ipara += L*K*K;
   vec paraB = zeros(K);
-  vec paraSig = paras(span(ipara,ipara+K-1));
+  vec paraSig = paras(arma::span(ipara,ipara+K-1));
   ipara += K;
   //
   int nb_RE = sum(sum(q0)+sum(q));
   mat matD = DparChol(nb_RE, alpha_D);
   int n_cols_matD = matD.n_cols;
-  mat matDw = matD(span(0,K-1),span(0,K-1));
-  mat matDw_u = DeltaT*matD(span(0,K-1),span(K,n_cols_matD-1));
-  mat matDu = DeltaT*matD(span(K,n_cols_matD-1),span(K,n_cols_matD-1))*DeltaT;
+  mat matDw = matD(arma::span(0,K-1),arma::span(0,K-1));
+  mat matDw_u = DeltaT*matD(arma::span(0,K-1),arma::span(K,n_cols_matD-1));
+  mat matDu = DeltaT*matD(arma::span(K,n_cols_matD-1),arma::span(K,n_cols_matD-1))*DeltaT;
   mat matB = KmatDiag(paraB); // unstructured variance-covariance matrice
   mat Sig = KmatDiag(paraSig); // noice
   //Creation of matrix G_mat_prod_A_0_to_tau that contains all products  A(j) from t_i a Tmax: t_i \in 0, Tmax
