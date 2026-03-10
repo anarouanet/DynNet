@@ -93,7 +93,6 @@ f.link <- function(outcomes, Y,link=NULL, knots = NULL, na.action = 'na.pass'){
       }
       nknots <- as.numeric(linkSpe[[k]][1])
       
-      browser()
       temp <- try(linkSpe[[k]][3] <- as.numeric(linkSpe[[k]][3]),silent = FALSE)
       if(inherits(temp ,'try-error') | temp < 1){
         stop("for I-splines link function: the second argument  must be a positive integer (degree of splines)")
