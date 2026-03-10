@@ -410,7 +410,7 @@ DynNet <- function(structural.model, measurement.model, parameters,
   if(!TimeDiscretization){ # If discretization process is external, we need to check that time is multiple of DeltaT
     if(!all(round((data[,Time]/DeltaT)-round(data[,Time]/DeltaT),8)==0.0))stop(paste("Discretized Time must be multiple of", DeltaT, sep = " "))
   }  
-  if(dim(unique(data))[1] != dim(data)[1]) stop("Some rows are the same in the dataset, perhaps because of a too large discretisation step")
+  if(dim(unique(data))[1] != dim(data)[1]) warning("Some rows are the same in the dataset, perhaps because of a too large discretisation step")
   
   
   data <- data[order(data[,subject], data[,Time]),]
